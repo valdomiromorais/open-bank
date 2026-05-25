@@ -1,0 +1,7 @@
+[package]
+name = "mu_db"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mu_core = { path = "../mu_core" }

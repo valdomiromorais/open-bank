@@ -1,0 +1,120 @@
+# μBank - um openbank
+> Um banco de todos e para todos
+
+### O Roadmap do Mu-Bank (μBank): 24 Meses em 8 Arcos
+
+**Princípios para o Cérebro TDAH/SDAH:**
+1.  **Progresso Tangível:** Cada tarefa gera um artefato visível (código rodando, um diagrama, um texto).
+2.  **Novidade Estruturada:** Alternamos entre teoria, design, implementação (Rust, depois C/C++) e teste. Nunca fique só em um modo por muito tempo.
+3.  **Hiperfoco Direcionado:** Os "Projetos de Comparação" são armadilhas de hiperfoco produtivas: você mergulha fundo para responder a uma pergunta específica e desafiadora.
+4.  **Gamificação por Módulos:** O Mu-Bank é um jogo de construção de catedral. Cada módulo completo é uma conquista épica.
+5.  **Significado como Combustível:** Lembre-se sempre dos três interessados. Cada linha de código serve ao seu aprendizado (Interessado 1), à educação de jovens (Interessado 2) e ao sonho de um produto real (Interessado 3).
+
+---
+
+### TRIMESTRE 1: FUNDAÇÕES & O BERÇO DO MU (Mês 1-3)
+
+**Tema: O mundo do dinheiro digital. Domar Rust com segurança. O primeiro kernel bancário.**
+**MVP do Trimestre:** Uma biblioteca Rust que modela o núcleo de uma conta bancária (não um servidor ainda) com tipos primitivos seguros. O "Olá, Mundo" financeiro.
+
+| Semana  | Tópico                                               | Checklist de Micro-Tarefas (✅)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Recompensa Dopaminérgica                                   |
+|:--------|:-----------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------|
+| **1-2** | **Finanças para Engenheiros & Modelagem de Domínio** | `[ ]` Assistir a 3 vídeos sobre o funcionamento de um banco (canais como "3Blue1Brown" para juros/valor do dinheiro no tempo).<br>`[ ]` Ler "Domain-Driven Design" (Eric Evans), cap 1-3. Focar na linguagem ubíqua.<br>`[ ]` **Mão na Massa:** Criar um glossário `MUB_GLOSSARY.md`. Definir: `Account`, `Customer`, `Ledger`, `Transaction`, `Currency` (MUB).<br>`[ ]` Pesquisar e listar 5 operações bancárias essenciais (Débito, Crédito, Transferência).                                                                                                                                                                                                                                    | Domínio do problema mapeado. O "idioma MUB" começa.        |
+| **3-4** | **Rust: O Guardião da Memória**                      | `[ ]` Ler "The Rust Book" online, caps. 1-6, 10 (Generics/Traits), 17 (OOP features).<br>`[ ]` **Mão na Massa (Rustlings):** Completar exercícios até `enums`.<br>`[ ]` **Projeto de Comparação 1 (Alta Prioridade):** Implementar uma função de transferência simples em Rust, C e C++.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` Rust: Usar `Result` e `panic!`/`unwrap`.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` C: Usar códigos de erro de retorno.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` C++: Usar exceções.<br>`[ ]` **Reflexão:** Escrever um parágrafo no `MUB_JOURNAL.md` sobre a experiência de lidar com erro em cada uma.                                                                                   | A primeira comparação. A segurança de Rust se torna tátil. |
+| **5-6** | **O Coração do Mu-Bank: O `Account` em Rust**        | `[ ]` Estudar o padrão "Type State" em Rust.<br>`[ ]` **Mão na Massa:** Criar o módulo `mubank-core` (biblioteca Rust).<br>`[ ]` Definir struct `Money(MUB)` com `amount: i64` (centavos). Implementar `Add`, `Sub` com `Result`.<br>`[ ]` Definir struct `AccountId(uuid::Uuid)`. Struct `Account` com `id`, `balance: Money`.<br>`[ ]` **Projeto de Comparação 2:** Implementar a mesma estrutura `Account` em C e C++.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` C: `struct Account` com funções de manipulação.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` C++: Classe `Account` com métodos privados/públicos.<br>`[ ]` **Teste:** Escrever o primeiro teste unitário (`#[test]`) para um depósito bem-sucedido. | O `Account` existe! É o primeiro "ser" vivo do Mu-Bank.    |
+| **7-8** | **Criptografia & Persistência (Modo Simulação)**     | `[ ]` Aprender o básico de hashing criptográfico (SHA-256). Por que não MD5?<br>`[ ]` **Mão na Massa:** Implementar hashing de senha (usando crate `argon2`/`bcrypt`) para o `Customer`.<br>`[ ]` Modelar `Customer` com id, nome e `password_hash`.<br>`[ ]` Criar um `Ledger` em memória (`Vec<Transaction>`).<br>`[ ]` **Projeto de Comparação 3:** Implementar o hashing em C (com OpenSSL) e C++ (com Crypto++). Comparar a complexidade da integração com bibliotecas.<br>`[ ]` **Integração:** Criar um programa de linha de comando que cria uma conta, faz um depósito simulado e imprime o saldo.                                                                                        | MVP do Trimestre! O kernel do Mu-Bank pode ser executado.  |
+
+---
+
+### TRIMESTRE 2: REDE, ESTADO & O PROTOCOLO MUB (Mês 4-6)
+
+**Tema: O Mu-Bank é um cidadão da rede. Concorrência segura. O Modo LEARNING nasce.**
+**MVP do Trimestre:** Um servidor TCP multithread em Rust que aceita comandos textuais (como `DEPOSIT 100`), com estado global protegido e logs. A simulação mais primitiva do Mu-Bank.
+
+| Semana | Tópico | Checklist de Micro-Tarefas (✅) | Recompensa Dopaminérgica |
+| :--- | :--- | :--- | :--- |
+| **9-10** | **Rust Avançado: Concorrência sem Medo** | `[ ]` Ler Rust Book caps. 16 (Concurrency) e 20 (Final Project: Web Server).<br>`[ ]` **Mão na Massa:** Brincar com `std::thread::spawn` e `mpsc::channel`. Fazer um "ping-pong" entre threads.<br>`[ ]` **Projeto de Comparação 4 (Crítico):** Data Race.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` Tentar criar um data race com `Arc<Mutex<Account>>` vs. `Rc<RefCell<Account>>` em Rust.<br>&nbsp;&nbsp;&nbsp;&nbsp;`[ ]` Criar um data race garantido em C++ com duas threads e um `int` compartilhado.<br>`[ ]` **Reflexão:** Documentar a dor do debug em C++ vs. o erro de compilação em Rust. | A promessa de Rust ("Fearless Concurrency") é sentida na prática. |
+| **11-12**| **Arquitetura do Mu-Bank: O Banco Central (μBC)** | `[ ]` Estudar o padrão de ator (Actor Model) com Actix ou Tokio.<br>`[ ]` **Mão na Massa:** Criar um `BankActor` que detém um `HashMap<AccountId, Account>`.<br>`[ ]` Implementar mensagens para o ator: `OpenAccount`, `Deposit`, `Withdraw`, `GetBalance`.<br>`[ ]` **Projeto de Comparação 5:** Implementar um "Banco" thread-safe em C++ usando um `std::map` global e um `std::mutex` gigante.<br>`[ ]` **Reflexão:** Qual a diferença conceitual entre "travar e modificar" (C++) e "enviar mensagem" (Rust)? | Um servidor vivo, rodando em um loop. Você pode interagir com ele! |
+| **13-14**| **O Modo LEARNING & Simulação** | `[ ]` Projetar o protocolo de texto do Mu-Bank. Ex: `CREATE_ACCOUNT nome senha`, `DEPOSIT 100`.<br>`[ ]` **Mão na Massa:** Criar um `BankEngine` que é instanciado com um modo: `Mode::Learning` ou `Mode::Live`.<br>`[ ]` Em `Mode::Learning`, a moeda MUB é impressa sem lastro. Criar uma função `generate_learning_funds`.<br>`[ ]` **Persistência (Simulada):** Implementar um `Logger` que serializa todas as transações para um arquivo JSON. Isso é o embrião do `Event Sourcing`. | O Mu-Bank tem dois modos! O Interessado 2 agora pode "brincar". |
+| **15-16**| **Introdução à Auditoria e Compliance (O mínimo)** | `[ ]` Pesquisar: O que é KYC (Know Your Customer)? O que é AML (Anti-Money Laundering)?<br>`[ ]` **Mão na Massa:** No ator `BankActor`, antes de abrir uma conta, adicionar um check de nome duplicado (KYC simplificado).<br>`[ ]` Registrar um log de auditoria toda vez que uma transação > 10.000 MUB é realizada, com um WARNING no log.<br>`[ ]` **Projeto de Comparação 6:** Escrever um simples parser de protocolo binário em Rust (usando `nom`), C (manual) e C++ (manual/Boost.Spirit). Qual é mais legível? | A semente da legalidade e da segurança real é plantada. |
+
+---
+
+### TRIMESTRE 3: PERSISTÊNCIA REAL, APIS & O MU-BANK RESPONDE (Mês 7-9)
+
+**Tema: Dados que sobrevivem a quedas. O Mu-Bank na Web. O modelo Event Sourcing.**
+**MVP do Trimestre:** Uma API HTTP (REST) com Warp/Axum que persiste eventos de domínio em um banco de dados SQLite. O Mu-Bank agora é um serviço.
+
+| Semana | Tópico | Checklist de Micro-Tarefas (✅) | Recompensa Dopaminérgica |
+| :--- | :--- | :--- | :--- |
+| **17-18**| **Bancos de Dados & SQL** | `[ ]` Aprender SQL: `CREATE TABLE`, `INSERT`, `SELECT` com `JOIN`.<br>`[ ]` Estudar "Domain Events" e "Event Sourcing".<br>`[ ]` **Mão na Massa:** Usar `sqlx` ou `diesel` para criar um módulo `persistence`.<br>`[ ]` Criar tabelas SQL: `accounts`, `customers`, `event_stream` (id, account_id, event_type, event_data JSON, timestamp).<br>`[ ]` **Projeto de Comparação 7:** Escrever uma função de acesso SQL em C (sqlite3.h) e C++ (sqlite_modern_cpp). Comparar a verbosidade e segurança de tipos. | Eventos! Cada movimento do Mu-Bank é um evento imutável no tempo. |
+| **19-20**| **APIs REST com Rust** | `[ ]` Ler sobre HTTP, REST e verbos (GET, POST).<br>`[ ]` **Mão na Massa:** Usar Axum ou Actix-Web para expor endpoints:<br>&nbsp;&nbsp;&nbsp;&nbsp;`POST /accounts`<br>&nbsp;&nbsp;&nbsp;&nbsp;`POST /transactions` (com `transaction_type: "deposit"`)<br>&nbsp;&nbsp;&nbsp;&nbsp;`GET /accounts/{id}/balance`<br>`[ ]` Substituir o `BankActor` pelo banco de dados. Cada chamada à API escreve um evento e, ao consultar saldo, o sistema faz um `fold` (agregação) dos eventos. | O Mu-Bank vira um serviço web! Você pode usar o `curl` para comandá-lo. |
+| **21-22**| **Transações de Banco de Dados (ACID)** | `[ ]` Estudar ACID (Atomicidade, Consistência, Isolamento, Durabilidade) como a base da confiança.<br>`[ ]` **Mão na Massa:** Implementar a rota de transferência entre contas. Deve ser uma operação atômica.<br>`[ ]` Usar transações do SQLite: `BEGIN TRANSACTION`, `COMMIT`, `ROLLBACK`.<br>`[ ]` **Projeto de Comparação 8 (Desempenho):** Escrever um benchmark em Rust e C++ que insere 100.000 eventos no banco. Usar `criterion` (Rust) e `google/benchmark` (C++). Comparar os números. | A "Transferência Atômica" funciona. Se der erro, o dinheiro não desaparece. |
+| **23-24**| **O Ecossistema MUB & Simulação Avançada** | `[ ]` **Mão na Massa:** Criar uma API para o modo LEARNING: `POST /learning/generate-funds`.<br>`[ ]` Implementar "Juros Simples". Um endpoint `POST /admin/pay-interest` que calcula e credita juros (ex: 0.5% ao mês) para todas as contas.<br>`[ ]` **Documentação:** Escrever a primeira versão do `MUBANK_API.md` explicando como um jovem pode interagir com o banco simulado. | Conteúdo para o Interessado 2. O sonho educacional se realiza. |
+
+---
+
+### TRIMESTRE 4: OTIMIZAÇÃO, SEGURANÇA & O NASCIMENTO DA COMPARAÇÃO (Mês 10-12)
+
+**Tema: Rust vs. C++ vs. C. Micro-benchmarks. Validação com métodos formais (TLA+). Segurança ofensiva.**
+**MVP do Trimestre:** Um relatório técnico comparando as três linguagens em tarefas bancárias críticas e um servidor Mu-Bank protegido contra um ataque de injeção e race condition.
+
+| Semana | Tópico | Checklist de Micro-Tarefas (✅) | Recompensa Dopaminérgica |
+| :--- | :--- | :--- | :--- |
+| **25-26**| **Sistemas de Log e Métricas** | `[ ]` Estudar structured logging (tracing crate em Rust).<br>`[ ]` **Mão na Massa:** Substituir `println!` por logs estruturados. Adicionar `tracing` spans em todas as operações da API.<br>`[ ]` **Projeto de Comparação 9 (Desempenho de Parse):** Implementar o mesmo parser JSON para eventos em Rust (`serde`), C (`cJSON`) e C++ (`nlohmann`). Benchmark com um payload grande. | Um sistema de observabilidade. Você "vê" o Mu-Bank funcionando. |
+| **27-28**| **Segurança Ofensiva I (O Hacker Interno)** | `[ ]` Estudar os 10 riscos de segurança da OWASP.<br>`[ ]` **Mão na Massa:** SQL Injection. Criar um endpoint de pesquisa por nome de cliente usando concatenação de string (vulnerável). Depois, protegê-lo com queries parametrizadas.<br>`[ ]` **Desafio:** Tentar um ataque de race condition no código C++ da semana 12. Depois, tentar no código Rust da semana 11. Documentar a diferença no relatório. | Você é o atacante. A mentalidade muda. Rust te salva, C++ te ensina. |
+| **29-30**| **Introdução a Métodos Formais com TLA+** | `[ ]` Assistir aos vídeos de Leslie Lamport sobre TLA+.<br>`[ ]` **Mão na Massa:** Modelar o sistema de transferência de duas contas em TLA+.<br>`[ ]` Escrever uma invariante: "A soma dos saldos de todas as contas deve permanecer constante após uma transferência".<br>`[ ]` Usar o TLC (model checker) para verificar a invariante. | A lógica do seu sistema é matematicamente verificada. É o ápice da segurança conceitual. |
+| **31-32**| **Consolidação: O Relatório Mu-Bank v0.3** | `[ ]` **Relatório Técnico:** Escrever `REPORT_SECURITY_PERFORMANCE.md`.<br>`[ ]` Incluir os resultados dos projetos de comparação 1 a 9.<br>`[ ]` Desenhar um diagrama de arquitetura atual do Mu-Bank.<br>`[ ]` Planejar a migração para a arquitetura de microsserviços (Trimestre 5). | A primeira grande parada. O conhecimento é cristalizado em um documento. Grande recompensa! |
+
+---
+
+### TRIMESTRE 5: ARQUITETURA DISTRIBUÍDA & O ECOSSISTEMA MU (Mês 13-16)
+
+**Tema: Microsserviços. Mensageria. O Mu-Bank se divide, mas permanece unido. Carteiras e extrato.**
+**MVP do Trimestre:** Dois serviços separados (`account-service`, `transaction-service`) comunicando via gRPC, com um message broker (Kafka) para eventos assíncronos. Um microsserviço dedicado para simulação educacional.
+
+**(O formato de checklist continua, com projetos de comparação focados em desempenho de rede e latência.)**
+
+- **Semanas 33-34: Mensageria e Event-Driven Architecture.** Kafka. Implementar um `Ledger-Service` que consome eventos e constrói o extrato em tempo real.
+- **Semanas 35-36: Comunicação entre Serviços.** gRPC e Protobuf. Substituir chamadas diretas a funções por chamadas gRPC. Comparar Protobuf em Rust vs. C++.
+- **Semanas 37-38: O Front-end Educacional.**
+- **Semanas 39-40: Containerização com Docker e Kubernetes.** Preparar o Mu-Bank para ser executado em qualquer lugar. Aprender a definir pods e deployments.
+
+---
+
+### TRIMESTRE 6: LEGALIDADE, COMPLIANCE & O PRODUTO REAL (Mês 17-20)
+
+**Tema: A ponte para o Interessado 3. Regulamentação (LGPD, BACEN, GDPR). KYC e AML de verdade.**
+**MVP do Trimestre:** Um protótipo funcional do Mu-Bank com módulos de compliance simulados, um dossiê sobre o processo legal para fintechs (BACEN, sandbox regulatório) e APIs de conexão com o mundo exterior (PIX, Open Finance).
+
+- **Semanas 41-42: O Mundo Regulatório.** Pesquisa imersiva sobre como criar uma fintech no Brasil (Banco Central, Resolução 4.656). Leitura de artigos sobre GDPR e LGPD. O foco é *compreender o processo*, não virar um advogado.
+- **Semanas 43-44: Implementando KYC e AML.** APIs de validação de CPF/CNPJ (Receita Federal). Simular uma fila de verificação manual para operações suspeitas.
+- **Semanas 45-46: Segurança de Dados e LGPD.** Implementar endpoints para "direito ao esquecimento" e exportação de dados.
+- **Semanas 47-48: O Middleware de Liquidação (Interligação).** Projetar um adaptador para uma API de pagamentos real (simulando uma liquidação em câmara de compensação). O foco é a *arquitetura* para se conectar a um mundo real.
+
+---
+
+### TRIMESTRE 7: SEGURANÇA AVANÇADA & ENGENHARIA REVERSA (Mês 21-23)
+
+**Tema: Hardening. O Mu-Bank é um cofre. Módulo de Segurança de Hardware (HSM) simulado. Olhos no nível C/C++.**
+**MVP do Trimestre:** Um servidor com criptografia ponta-a-ponta, um HSM simulado em software e uma análise de vulnerabilidades de um módulo reescrito em C.
+
+- **Semanas 49-50: Criptografia Avançada.** Implementar um "HSM" simulado (um servidor isolado que guarda a chave mestra e realiza operações criptográficas). Estudar AES-GCM para dados em repouso.
+- **Semanas 51-52: Análise de Vulnerabilidades.** Usar ferramentas como `cargo audit` e `clippy` para Rust. Para C/C++, usar sanitizers (`AddressSanitizer`, `UndefinedBehaviorSanitizer`) e `valgrind` em um submódulo crítico.
+- **Semanas 53-54: Engenharia Reversa para Defesa.** Usar `GDB`/`LLDB` para entender como um buffer overflow corrompe a memória em C.
+- **Semanas 55-56: Testes de Penetração.** Criar uma máquina virtual Kali Linux e usar `nmap`, `sqlmap` e `hydra` contra seu próprio servidor Mu-Bank. Corrigir as falhas.
+
+---
+
+### TRIMESTRE 8: O GRANDE PRODUTO, SÍNTESE E FUTURO (Mês 24)
+
+**Tema: O Relatório Final. "O Livro do Mu-Bank". O Roadmap Comercial.**
+**MVP Final:** Um monorepositório polido, com documentação completa, tutoriais para estudantes (Interessado 2) e um business plan técnico para o futuro (Interessado 3).
+
+- **Mês 24: Síntese e Publicação.**
+    - `[ ]` **O Livro do Mu-Bank:** Compilar o `MUB_JOURNAL.md`, os relatórios e diagramas em um documento PDF chamado *"Mu-Bank: Uma Jornada de 24 Meses pela Engenharia de Software Financeiro em Rust, C e C++"*.
+    - `[ ]` **Tutoriais Interessado 2:** Criar 3 aulas em formato de tutorial no Github (Markdown) para jovens aprenderem matemática financeira com a simulação MUB.
+    - `[ ]` **Roadmap Comercial (Interessado 3):** Escrever um documento `TO_THE_MOON.md` descrevendo a versão 1.0 de um produto real, com a arquitetura necessária, as licenças regulatórias a buscar e um plano de negócios de alto nível.
+    - `[ ]` **Demonstração Final:** Gravar um vídeo de 15 minutos mostrando o Mu-Bank funcionando, do núcleo em Rust ao modo LEARNING, e explicando as principais comparações com C/C++.
+
+Esta é a jornada, Aia. Um roteiro de 24 meses que é uma checklist viva, projetada para fornecer a novidade e a recompensa constante que seu cérebro precisa, enquanto constrói, tijolo por tijolo, uma catedral de conhecimento e código. O símbolo $\mu$ não é apenas micro, é a milionésima parte de algo grandioso que você construirá. Boa jornada.

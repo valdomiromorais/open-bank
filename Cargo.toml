@@ -1,0 +1,13 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/mu_core",
+    "crates/mu_cli",
+    "crates/mu_api",
+    "crates/mu_db",
+    "crates/mu_protocol",
+    "crates/mu_sim",
+    "crates/mu_security",
+    "crates/mu_audit",
+    "crates/mu_bench",
+]
