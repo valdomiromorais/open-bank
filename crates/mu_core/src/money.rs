@@ -1,49 +1,51 @@
 use crate::currency::Currency;
+use rust_decimal::Decimal;
 use std::fmt;
 use std::ops::{Add, Sub};
 
-/// A monetary value composed of an amount and a currency.
-/// #[ptbr] Amount armazenado na menor unidade (centavos) para evitar erros de ponto flutuante.
+/// A monetary value composed of a decimal amount and a currency.
+/// #[ptbr] Amount usa rust_decimal para representação exata sem ponto flutuante.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Money {
-    amount: i64,
-    currency: Currency,
+    pub amount: Decimal,
+    pub currency: Currency,
 }
 
 impl Money {
-    /// Creates a new Money value.
-    pub fn new(amount: i64, currency: Currency) -> Self {
+    pub fn new(amount: Decimal, currency: Currency) -> Self {
         Money { amount, currency }
     }
 
-    /// Zero value for a given currency.
     pub fn zero(currency: Currency) -> Self {
-        Money { amount: 0, currency }
+        Money {
+            amount: Decimal::ZERO,
+            currency,
+        }
     }
 
-    /// Returns the amount in the smallest unit (cents).
-    pub fn amount(&self) -> i64 {
+    pub fn amount(&self) -> Decimal {
         self.amount
     }
 
-    /// Returns the currency of this money.
     pub fn currency(&self) -> Currency {
         self.currency
-    }
-
-    /// Returns the amount as a formatted decimal string (e.g. "1234.56").
-    pub fn display_amount(&self) -> String {
-        let decimals = self.currency.decimals() as u32;
-        let divisor = 10i64.pow(decimals);
-        let whole = self.amount / divisor;
-        let fraction = self.amount.abs() % divisor;
-        format!("{}.{:02}", whole, fraction)
     }
 }
 
 impl fmt::Display for Money {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} {}", self.display_amount(), self.currency.code())
+        let d = self.currency.decimals() as u32;
+        let amount = self.amount.round_dp(d);
+        let s = amount.to_string();
+        match s.split_once('.') {
+            Some((int, frac)) => {
+                let padding = (d as usize).saturating_sub(frac.len());
+                write!(f, "{}.{}{} {}", int, frac, "0".repeat(padding), self.currency.code())
+            }
+            None => {
+                write!(f, "{}.{} {}", s, "0".repeat(d as usize), self.currency.code())
+            }
+        }
     }
 }
 
@@ -104,44 +106,45 @@ impl Sub for Money {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rust_decimal_macros::dec;
 
-    fn mub(amount: i64) -> Money {
+    fn mub(amount: Decimal) -> Money {
         Money::new(amount, Currency::MUB)
     }
 
-    fn usd(amount: i64) -> Money {
+    fn usd(amount: Decimal) -> Money {
         Money::new(amount, Currency::USD)
     }
 
     #[test]
     fn test_money_new() {
-        let m = Money::new(100, Currency::MUB);
-        assert_eq!(m.amount(), 100);
-        assert_eq!(m.currency(), Currency::MUB);
+        let m = Money::new(dec!(10.50), Currency::MUB);
+        assert_eq!(m.amount, dec!(10.50));
+        assert_eq!(m.currency, Currency::MUB);
     }
 
     #[test]
     fn test_money_zero() {
         let m = Money::zero(Currency::BRL);
-        assert_eq!(m.amount(), 0);
-        assert_eq!(m.currency(), Currency::BRL);
+        assert_eq!(m.amount, Decimal::ZERO);
+        assert_eq!(m.currency, Currency::BRL);
     }
 
     #[test]
     fn test_money_display() {
-        assert_eq!(mub(10050).to_string(), "100.50 MUB");
-        assert_eq!(usd(0).to_string(), "0.00 USD");
+        assert_eq!(mub(dec!(100.50)).to_string(), "100.50 MUB");
+        assert_eq!(usd(dec!(0)).to_string(), "0.00 USD");
     }
 
     #[test]
     fn test_money_add_same_currency() {
-        let result = mub(100) + mub(200);
-        assert_eq!(result, Ok(mub(300)));
+        let result = mub(dec!(100)) + mub(dec!(200));
+        assert_eq!(result, Ok(mub(dec!(300))));
     }
 
     #[test]
     fn test_money_add_different_currency() {
-        let result = mub(100) + usd(200);
+        let result = mub(dec!(100)) + usd(dec!(200));
         assert_eq!(
             result,
             Err(MoneyError::CurrencyMismatch {
@@ -153,27 +156,30 @@ mod tests {
 
     #[test]
     fn test_money_sub_same_currency() {
-        let result = mub(500) - mub(200);
-        assert_eq!(result, Ok(mub(300)));
+        let result = mub(dec!(500)) - mub(dec!(200));
+        assert_eq!(result, Ok(mub(dec!(300))));
     }
 
     #[test]
     fn test_money_sub_negative() {
-        let result = mub(100) - mub(500);
-        assert_eq!(result, Ok(mub(-400)));
+        let result = mub(dec!(100)) - mub(dec!(500));
+        assert_eq!(result, Ok(mub(dec!(-400))));
     }
 
     #[test]
     fn test_money_add_overflow() {
-        let result = mub(i64::MAX) - mub(-1);
+        let max = Money::new(Decimal::MAX, Currency::MUB);
+        let one = mub(dec!(1));
+        let result = max + one;
         assert_eq!(result, Err(MoneyError::Overflow));
     }
 
     #[test]
-    fn test_money_display_amount() {
-        assert_eq!(mub(12345).display_amount(), "123.45");
-        assert_eq!(mub(0).display_amount(), "0.00");
-        assert_eq!(mub(1).display_amount(), "0.01");
-        assert_eq!(mub(-500).display_amount(), "-5.00");
+    fn test_money_dec_literal() {
+        let m = Money {
+            amount: dec!(10.50),
+            currency: Currency::BRL,
+        };
+        assert_eq!(m.to_string(), "10.50 BRL");
     }
 }
