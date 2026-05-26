@@ -1,18 +1,18 @@
-# μBank — Um Openbank
+# μBank — Seu dinheiro é código. Sua conta é uma chave privada.
 
-> *Um banco de todos e para todos.*
+> *Um cofre digital distribuído. Construído em Rust. Blindado por design.*
 
-**μBank** é um projeto educacional e de engenharia de software focado em sistemas financeiros. Construído primariamente em **Rust**, com comparações deliberadas em **C** e **C++** para explorar trade-offs de segurança, desempenho e complexidade.
+**μBank** não é uma fintech colorida. É um **sistema financeiro de grade militar**, onde cada transação é verificada, cada moeda é tipada, e cada erro de domínio é capturado em compile-time — não em produção. Nada de curvas amigáveis. Arquitetura de **hardware security module**, estética red team, precisão criptográfica.
 
-## Missão
+Três interessados coexistem no μBank:
 
-O projeto atende três interessados simultaneamente:
+| Operador          | Missão                                                                                                                                                                |
+|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Interessado 1** | Domínio de arquitetura financeira segura em **Rust**, com comparações deliberadas em **C** e **C++** para dissecar trade-offs de segurança, desempenho e complexidade |
+| **Interessado 2** | **Modo LEARNING** — jovens exploram matemática financeira em ambiente sandbox com moeda **MUB**, sem risco real                                                       |
+| **Interessado 3** | Roteiro regulatório (BACEN, LGPD, Open Finance) para um produto real operando com moedas fiduciárias (USD, EUR, BRL)                                                  |
 
-| Interessado | Foco |
-|---|---|
-| **1 — Eu** | Aprendizado de arquitetura financeira, engenharia de software seguro, e domínio de Rust + C/C++ |
-| **2 — Jovens estudantes** | Ambiente simulado **LEARNING** com moeda **MUB** para explorar matemática financeira e operações bancárias |
-| **3 — Mercado futuro** | Roteiro regulatório (BACEN, LGPD, Open Finance) para um produto real operando com moedas fiduciárias (USD, EUR, BRL) |
+---
 
 ## Arquitetura
 
@@ -29,26 +29,28 @@ O projeto atende três interessados simultaneamente:
 └── mu_bench/       Benchmarks e harness de comparação C/C++
 ```
 
-## Estado atual
+## Estado atual do cofre
 
-- ✅ Workspace Rust configurado com 9 crates
-- ✅ `mu_core` — `Currency` (MUB, USD, EUR, BRL) + `Money` (Decimal preciso, Add/Sub seguros)
-- 🟡 Demais crates — stubs aguardando implementação
-- 📚 Documentação em `docs/` (roadmap, context memory, branding)
+- ✅ Workspace Rust — 9 crates, resolver 3, compile em paralelo
+- ✅ `mu_core` — `Currency` (MUB, USD, EUR, BRL) + `Money` (`rust_decimal`, Add/Sub com `Result`, 13 testes)
+- 🟡 Demais crates — stubs, aguardando ativação
+- 📚 Documentação viva em `docs/` (roadmap, context memory, branding, briefings)
+
+---
 
 ## Como usar
 
 ```bash
-# Compilar tudo
+# Compilar tudo (sem aviso, sem erro)
 cargo build
 
-# Rodar testes do core
+# Verificar a blindagem do core
 cargo test -p mu_core
 
-# Executar o CLI (MVP inicial)
+# Executar a interface de comando (MVP textual)
 cargo run -p mu_cli
 ```
 
 ## Licença
 
-MIT
+MIT — porque segurança não precisa de código fechado.
