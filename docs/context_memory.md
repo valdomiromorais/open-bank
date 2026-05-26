@@ -14,7 +14,7 @@
 - **Prazo:** 24 meses (8 trimestres), vide `docs/roadmap.md`
 - **Prompt original:** `docs/initial_prompt.md`
 
-## 2. Estado atual (commit `3f8fb07` + alterações não commitadas)
+## 2. Estado atual (commit `3a66aa7`)
 
 ### Workspace Rust (`Cargo.toml` raiz como `[workspace]`)
 
@@ -85,6 +85,9 @@ crates/
 
 - `docs/MUB_GLOSSARY.md` criado com 40+ termos da linguagem ubíqua, abrangendo 8 bounded contexts
 - Roadmap checkbox marcado (`[x]`)
+- `.github/PULL_REQUEST_TEMPLATE.md` — template de PR configurado seguindo GitHub Flow
+- `docs/domain_design_document.md` absorvido como referência arquitetural
+- `README.md`, `docs/context_memory.md`, `docs/roadmap.md` alinhados à vibe red team
 
 ### 🔜 Próximos passos
 
@@ -96,7 +99,8 @@ Conforme roadmap, semanas 1-2 continuam com:
 
 - Sempre que possível, prefira bibliotecas bem estabelecidas (ex: `rust_decimal` em vez de implementar do zero)
 - O remote é `origin → https://github.com/valdomiromorais/open-bank.git`
-- Commits são em inglês, descritivos, com escopo do crate afetado (`feat(mu_core): ...`)
+- Commits são em inglês, descritivos, com escopo do crate afetado (`feat(mu_core): ...`, `docs: ...`, `chore: ...`)
+- Fluxo de trabalho: GitHub Flow simplificado — branches curtas `feat/`, PRs com template próprio em `.github/PULL_REQUEST_TEMPLATE.md`
 
 ## 8. Arquivos vivos — atualização contínua
 
