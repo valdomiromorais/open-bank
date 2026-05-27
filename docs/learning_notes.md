@@ -11,7 +11,13 @@
 
 ## Financial Learning Notes
 
-1. 
+### UUID
+   
+UUID significa **Universally Unique Identifier** (Identificador Único Universal). É um valor numérico de **_128 bits**_ utilizado para identificar de forma exclusiva qualquer tipo de informação ou objeto em sistemas de computação.
+A principal característica do UUID é permitir que **sistemas distribuídos gerem identificadores locais sem a necessidade de uma autoridade central de coordenação**.
+Isso significa que dois sistemas independentes podem criar UUIDs simultaneamente com **uma probabilidade matematicamente desprezível de gerarem o mesmo código**.
+
+### ---
 
 ---
 
