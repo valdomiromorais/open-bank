@@ -10,7 +10,7 @@
 - **Missão:** Banco digital mais seguro da Terra — um cofre blindado por design — três interessados coexistem:
   - **Interessado 1 (eu):** aprendizado de engenharia/arquitetura financeira em Rust (primário), C e C++ (comparação)
   - **Interessado 2 (jovens):** simulação bancária modo LEARNING com moeda MUB para aprender matemática financeira
-  - **Interessado 3 (futuro):** produto comercial real (USD, EUR, BRL) com合规 legal (BACEN, LGPD, Open Finance)
+  - **Interessado 3 (futuro):** produto comercial real (USD, EUR, BRL) com _Compliance_ (Conformidade) legal (BACEN, LGPD, Open Finance)
 - **Prazo:** 24 meses (8 trimestres), vide `docs/roadmap.md`
 - **Prompt original:** `docs/initial_prompt.md`
 
