@@ -1,3 +1,5 @@
+//#[ptbr] módulo revisado: preciso entender um pouco mais sobre TryFrom e to_string em variantes de enums
+
 use std::fmt;
 
 /// Represents a currency unit in the Mu-Bank system. \
@@ -58,13 +60,13 @@ impl Currency {
 
     /// Number of decimal places for this currency.
     pub fn decimals(&self) -> u8 {
-        2
+        2_u8
     }
 
     /// Full name of the currency.
     pub fn name(&self) -> &'static str {
         match self {
-            Currency::MUB => "Mu-Bank",
+            Currency::MUB => "MuBank",
             Currency::USD => "US Dollar",
             Currency::EUR => "Euro",
             Currency::BRL => "Brazilian Real",
@@ -82,7 +84,7 @@ impl fmt::Display for Currency {
 }
 
 impl TryFrom<&str> for Currency {
-    type Error = String;
+    type Error = String; //#[ptbr] Error alias para String
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value.to_uppercase().as_str() {
@@ -93,7 +95,7 @@ impl TryFrom<&str> for Currency {
             "CNY" => Ok(Currency::CNY),
             "GBP" => Ok(Currency::GBP),
             "JPY" => Ok(Currency::JPY),
-            _ => Err(format!("Unknown currency code: {}", value)),
+            _ => Err(format!("Unknown currency ISO code: {}", value)),
         }
     }
 }

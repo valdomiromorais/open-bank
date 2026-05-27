@@ -1,10 +1,12 @@
-use crate::currency::Currency;
+//#[ptbr] Módulo revisado: entender um pouco mais sobre std::ops{...}
+
+use crate::currency::Currency; //#[ptbr] funcionaria assim tbm: crate::Currency por conta de lib.rs
 use rust_decimal::Decimal;
 use std::fmt;
 use std::ops::{Add, Sub};
 
 /// A monetary value composed of a decimal amount and a currency.
-/// #[ptbr] Amount usa rust_decimal para representação exata sem ponto flutuante.
+//#[ptbr] Amount usa rust_decimal para representação exata sem ponto flutuante (f32 e f64).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Money {
     pub amount: Decimal,
@@ -30,16 +32,16 @@ impl Money {
     pub fn currency(&self) -> Currency {
         self.currency
     }
-}
+} //#[ptbr] fim de impl
 
 impl fmt::Display for Money {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let d = self.currency.decimals() as u32;
-        let amount = self.amount.round_dp(d);
+        let amount = self.amount.round_dp(d); //#[ptbr] dp é decimal points
         let s = amount.to_string();
         match s.split_once('.') {
             Some((int, frac)) => {
-                let padding = (d as usize).saturating_sub(frac.len());
+                let padding = (d as usize).saturating_sub(frac.len()); //#[ptbr] ver o que de fato isso faz
                 write!(f, "{}.{}{} {}", int, frac, "0".repeat(padding), self.currency.code())
             }
             None => {
