@@ -1,29 +1,32 @@
 use std::fmt;
 
-/// Represents a currency unit in the Mu-Bank system.
-/// #[ptbr] Moeda com suporte a MUB (aprendizado) e moedas fiduciárias.
+/// Represents a currency unit in the Mu-Bank system. \
+/// #[ptbr] Moeda com suporte a MUB (aprendizado) e moedas fiduciárias. \
 /// #[ptbr] ISO 4217 <https://en.wikipedia.org/wiki/ISO_4217> é um padrão internacional estabelecido pela ISO que
-/// #[ptbr] define códigos de três letras e de três dígitos para representar moedas e fundos no mundo todo.
+/// define códigos de três letras e de três dígitos para representar moedas e fundos no mundo todo.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Currency {
     MUB,
     USD, //#[ptbr] Dólar americano
     EUR, //#[ptbr] Euro
     BRL, //#[ptbr] Real Brasileiro
-    CNY, //#[ptbr] Renminbi Chinês
-    GBP, //#[ptbr] Pound sterling // Libra esterlina
+    CNY, //#[ptbr] Yuan/Renminbi Chinês
+    GBP, //#[ptbr] Libra esterlina (Pound sterling)
+    JPY, //#[ptbr] Yen Japonês
 }
 
 impl Currency {
-    /// ISO 4217 numeric code (MUB uses 999 as a private range).
+    /// ISO 4217 (https://www.iso.org/standard/64758.html) numeric code
+    /// (MUB uses 999 as a private range).
     pub fn numeric_code(&self) -> u16 {
         match self {
-            Currency::MUB => 999,
-            Currency::USD => 840,
-            Currency::EUR => 978,
-            Currency::BRL => 986,
-            Currency::CNY => 156,
-            Currency::GBP => 826,
+            Currency::MUB => 999, //No currency
+            Currency::USD => 840, //ok
+            Currency::EUR => 978, //ok
+            Currency::BRL => 986, //ok
+            Currency::CNY => 156, //ok
+            Currency::GBP => 826, //ok
+            Currency::JPY => 392, //ok
         }
     }
 
@@ -36,6 +39,7 @@ impl Currency {
             Currency::BRL => "BRL",
             Currency::CNY => "CNY",
             Currency::GBP => "GBP",
+            Currency::JPY => "JPY",
         }
     }
 
@@ -46,8 +50,9 @@ impl Currency {
             Currency::USD => "$",
             Currency::EUR => "\u{20ac}",
             Currency::BRL => "R$",
-            Currency::CNY => "\u{00a5}",
+            Currency::CNY => "CN\u{00A5}", // mesmo do JPY?
             Currency::GBP => "\u{00a3}",
+            Currency::JPY => "JP\u{00A5}", //ok
         }
     }
 
@@ -65,6 +70,7 @@ impl Currency {
             Currency::BRL => "Brazilian Real",
             Currency::CNY => "Chinese Yuan (Renminbi)",
             Currency::GBP => "Pound Sterling",
+            Currency::JPY => "Japanese Yen",
         }
     }
 }
@@ -86,6 +92,7 @@ impl TryFrom<&str> for Currency {
             "BRL" => Ok(Currency::BRL),
             "CNY" => Ok(Currency::CNY),
             "GBP" => Ok(Currency::GBP),
+            "JPY" => Ok(Currency::JPY),
             _ => Err(format!("Unknown currency code: {}", value)),
         }
     }
@@ -102,14 +109,17 @@ mod tests {
         assert_eq!(Currency::EUR.code(), "EUR");
         assert_eq!(Currency::BRL.code(), "BRL");
         assert_eq!(Currency::CNY.code(), "CNY");
+        assert_eq!(Currency::JPY.code(), "JPY");
         assert_eq!(Currency::GBP.code(), "GBP");
+        assert_eq!(Currency::JPY.code(), "JPY");
     }
 
     #[test]
     fn test_currency_symbol() {
         assert_eq!(Currency::MUB.symbol(), "\u{00b5}");
         assert_eq!(Currency::USD.symbol(), "$");
-        assert_eq!(Currency::CNY.symbol(), "\u{00a5}");
+        assert_eq!(Currency::CNY.symbol(), "CN\u{00a5}");
+        assert_eq!(Currency::JPY.symbol(), "JP\u{00a5}");
         assert_eq!(Currency::GBP.symbol(), "\u{00a3}");
     }
 
@@ -119,6 +129,7 @@ mod tests {
         assert_eq!(Currency::try_from("BRL"), Ok(Currency::BRL));
         assert_eq!(Currency::try_from("cny"), Ok(Currency::CNY));
         assert_eq!(Currency::try_from("GBP"), Ok(Currency::GBP));
+        assert_eq!(Currency::try_from("JPY"), Ok(Currency::JPY));
         assert!(Currency::try_from("XYZ").is_err());
     }
 
@@ -127,5 +138,6 @@ mod tests {
         assert_eq!(Currency::MUB.to_string(), "MUB");
         assert_eq!(Currency::EUR.to_string(), "EUR");
         assert_eq!(Currency::GBP.to_string(), "GBP");
+        assert_eq!(Currency::JPY.to_string(), "JPY");
     }
 }
