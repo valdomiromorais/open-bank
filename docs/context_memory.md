@@ -81,13 +81,19 @@ crates/
   - **⚠️ Importante:** o Interessado 1 pretende remover **todos** os comentários `#[ptbr]` futuramente, quando julgar que o aprendizado foi satisfatório. Isso pode ser feito com uma regex simples do tipo `//\s*#\[ptbr\].*\n` em todo o código-base.
 - **Estilo:** sem comentários supérfluos; usar tipos e nomes expressivos
 
-## 5. Alinhamento roadmap × prompt
+## 5. Identidade visual
+
+- **Fonte principal:** JetBrains Mono (monoespaçada técnica) — usada em logo, numeração de cartão, interface e código
+- **Paleta:** preto absoluto (`#000000`), verde terminal (`#00FF41`), dourado frio (`#D4AF37`), vermelho sangue digital (`#FF0040`)
+- **Estética:** hardware security module, red team, sem curvas amigáveis
+
+## 6. Alinhamento roadmap × prompt
 
 - Roadmap `docs/roadmap.md` abrange os 24 meses em 8 trimestres
 - Alinhamento quase total com o prompt (ver `docs/roadmap.md` seção de análise)
 - **Único gap:** a convenção `#[ptbr]` não está explícita no roadmap — está decidida neste contexto
 
-## 6. Progresso — Trimestre 1
+## 7. Progresso — Trimestre 1
 
 ### ✅ Concluído
 
@@ -105,14 +111,14 @@ crates/
 - Persistência com SQLite/`sqlx`
 - API HTTP com Axum
 
-## 7. Observações gerais
+## 8. Observações gerais
 
 - Sempre que possível, prefira bibliotecas bem estabelecidas (ex: `rust_decimal` em vez de implementar do zero)
 - O remote é `origin → https://github.com/valdomiromorais/open-bank.git`
 - Commits são em inglês, descritivos, com escopo do crate afetado (`feat(mu_core): ...`, `docs: ...`, `chore: ...`)
 - Fluxo de trabalho: GitHub Flow simplificado — branches curtas `feat/`, PRs com template próprio em `.github/PULL_REQUEST_TEMPLATE.md`
 
-## 8. Arquivos vivos — atualização contínua
+## 9. Arquivos vivos — atualização contínua
 
 A cada conclusão de tópico, os seguintes arquivos devem ser atualizados para refletir o estado real do projeto:
 
