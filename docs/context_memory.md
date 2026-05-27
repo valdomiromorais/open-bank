@@ -14,14 +14,14 @@
 - **Prazo:** 24 meses (8 trimestres), vide `docs/roadmap.md`
 - **Prompt original:** `docs/initial_prompt.md`
 
-## 2. Estado atual (commit `3a66aa7`)
+## 2. Estado atual (commit `6e54be1`)
 
 ### Workspace Rust (`Cargo.toml` raiz como `[workspace]`)
 
 ```
 crates/
-├── mu_core/        # ✅ ATIVO — Currency + Money (rust_decimal)
-├── mu_cli/         # 🟡 stub — main.rs só imprime placeholder
+├── mu_core/        # ✅ ATIVO — Currency, Money, Account, Customer, Transaction, Ledger
+├── mu_cli/         # ✅ DEMO FUNCIONAL — cria clientes, contas, deposita, saca, transfere
 ├── mu_api/         # 🟡 stub
 ├── mu_db/          # 🟡 stub
 ├── mu_protocol/    # 🟡 stub
@@ -33,7 +33,7 @@ crates/
 
 ### Crate `mu_core` — implementado
 
-- **`Currency`** (`currency.rs`): enum `MUB | USD | EUR | BRL`
+- **`Currency`** (`currency.rs`): enum `MUB | USD | EUR | BRL | CNY | GBP`
   - ISO 4217 numeric codes (MUB = 999 privado)
   - `code()`, `symbol()`, `name()`, `decimals()`
   - `TryFrom<&str>`, `Display`
@@ -42,7 +42,15 @@ crates/
   - `Add`/`Sub` devolvem `Result<Money, MoneyError>`
   - Protege contra: mistura de moedas → `CurrencyMismatch`, overflow → `Overflow`
   - Display com casas decimais fixas conforme `Currency::decimals()`
-  - 13 testes unitários passando
+- **`Customer`** (`customer.rs`): `CustomerId(Uuid)`, `Customer { id, name }`
+- **`Account`** (`account.rs`): `AccountId(Uuid)`, `AccountStatus { Active, Frozen, Closed, PendingVerification }`, `Account { id, holder, status, currency }`
+- **`Transaction`** (`transaction.rs`): `TransactionId(Uuid)`, `TransactionKind { Deposit, Withdraw, Transfer }`, `Transaction { id, account_id, kind, amount, timestamp, description }`
+- **`Ledger`** (`ledger.rs`): engine central in-memory com:
+  - Customer CRUD, Account CRUD com activation
+  - `balance()` computado por fold no histórico (Event Sourcing)
+  - `deposit()`, `withdraw()`, `transfer()` com validações
+  - Proteções: conta inativa, moeda errada, saldo insuficiente, auto-transferência
+- **29 testes unitários passando** (13 originais + 16 novos)
 
 ### Docs — alinhamento de identidade (2026-05-26)
 
@@ -81,19 +89,21 @@ crates/
 
 ## 6. Progresso — Trimestre 1
 
-### ✅ Concluído (2026-05-26)
+### ✅ Concluído
 
-- `docs/MUB_GLOSSARY.md` criado com 40+ termos da linguagem ubíqua, abrangendo 8 bounded contexts
-- Roadmap checkbox marcado (`[x]`)
-- `.github/PULL_REQUEST_TEMPLATE.md` — template de PR configurado seguindo GitHub Flow
-- `docs/domain_design_document.md` absorvido como referência arquitetural
-- `README.md`, `docs/context_memory.md`, `docs/roadmap.md` alinhados à vibe red team
+- `docs/MUB_GLOSSARY.md` — glossário com 40+ termos
+- `.github/PULL_REQUEST_TEMPLATE.md` — template de PR (GitHub Flow)
+- `docs/domain_design_document.md` — referência arquitetural absorvida
+- **`mu_core`**: `Account`, `Customer`, `Transaction`, `Ledger` modelados (29 testes)
+- **`mu_cli`**: demo funcional — cria cliente, conta, deposita, saca, transfere, extrato
+- **`Currency`**: expandido com `CNY` e `GBP` (6 moedas)
+- `README.md`, `docs/context_memory.md`, `docs/roadmap.md` — alinhados e sincronizados
 
-### 🔜 Próximos passos
+### 🔜 Próximos passos (próximas semanas)
 
-Conforme roadmap, semanas 1-2 continuam com:
-- Operações bancárias essenciais (Débito, Crédito, Transferência)
-- Modelagem de `Account`, `Customer`, `Ledger`, `Transaction` em `mu_core`
+- Operações bancárias essenciais adicionais (Débito Automático, Estorno, Pagamento de Boletos)
+- Persistência com SQLite/`sqlx`
+- API HTTP com Axum
 
 ## 7. Observações gerais
 
