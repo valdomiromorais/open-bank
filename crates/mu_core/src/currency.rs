@@ -2,12 +2,16 @@ use std::fmt;
 
 /// Represents a currency unit in the Mu-Bank system.
 /// #[ptbr] Moeda com suporte a MUB (aprendizado) e moedas fiduciárias.
+/// #[ptbr] ISO 4217 <https://en.wikipedia.org/wiki/ISO_4217> é um padrão internacional estabelecido pela ISO que
+/// #[ptbr] define códigos de três letras e de três dígitos para representar moedas e fundos no mundo todo.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Currency {
     MUB,
-    USD,
-    EUR,
-    BRL,
+    USD, //#[ptbr] Dólar americano
+    EUR, //#[ptbr] Euro
+    BRL, //#[ptbr] Real Brasileiro
+    CNY, //#[ptbr] Renminbi Chinês
+    GBP, //#[ptbr] Pound sterling // Libra esterlina
 }
 
 impl Currency {
@@ -18,6 +22,8 @@ impl Currency {
             Currency::USD => 840,
             Currency::EUR => 978,
             Currency::BRL => 986,
+            Currency::CNY => 156,
+            Currency::GBP => 826,
         }
     }
 
@@ -28,6 +34,8 @@ impl Currency {
             Currency::USD => "USD",
             Currency::EUR => "EUR",
             Currency::BRL => "BRL",
+            Currency::CNY => "CNY",
+            Currency::GBP => "GBP",
         }
     }
 
@@ -38,6 +46,8 @@ impl Currency {
             Currency::USD => "$",
             Currency::EUR => "\u{20ac}",
             Currency::BRL => "R$",
+            Currency::CNY => "\u{00a5}",
+            Currency::GBP => "\u{00a3}",
         }
     }
 
@@ -53,6 +63,8 @@ impl Currency {
             Currency::USD => "US Dollar",
             Currency::EUR => "Euro",
             Currency::BRL => "Brazilian Real",
+            Currency::CNY => "Chinese Yuan (Renminbi)",
+            Currency::GBP => "Pound Sterling",
         }
     }
 }
@@ -72,6 +84,8 @@ impl TryFrom<&str> for Currency {
             "USD" => Ok(Currency::USD),
             "EUR" => Ok(Currency::EUR),
             "BRL" => Ok(Currency::BRL),
+            "CNY" => Ok(Currency::CNY),
+            "GBP" => Ok(Currency::GBP),
             _ => Err(format!("Unknown currency code: {}", value)),
         }
     }
@@ -87,24 +101,31 @@ mod tests {
         assert_eq!(Currency::USD.code(), "USD");
         assert_eq!(Currency::EUR.code(), "EUR");
         assert_eq!(Currency::BRL.code(), "BRL");
+        assert_eq!(Currency::CNY.code(), "CNY");
+        assert_eq!(Currency::GBP.code(), "GBP");
     }
 
     #[test]
     fn test_currency_symbol() {
         assert_eq!(Currency::MUB.symbol(), "\u{00b5}");
         assert_eq!(Currency::USD.symbol(), "$");
+        assert_eq!(Currency::CNY.symbol(), "\u{00a5}");
+        assert_eq!(Currency::GBP.symbol(), "\u{00a3}");
     }
 
     #[test]
     fn test_currency_try_from_str() {
         assert_eq!(Currency::try_from("usd"), Ok(Currency::USD));
         assert_eq!(Currency::try_from("BRL"), Ok(Currency::BRL));
-        assert!(Currency::try_from("GBP").is_err());
+        assert_eq!(Currency::try_from("cny"), Ok(Currency::CNY));
+        assert_eq!(Currency::try_from("GBP"), Ok(Currency::GBP));
+        assert!(Currency::try_from("XYZ").is_err());
     }
 
     #[test]
     fn test_currency_display() {
         assert_eq!(Currency::MUB.to_string(), "MUB");
         assert_eq!(Currency::EUR.to_string(), "EUR");
+        assert_eq!(Currency::GBP.to_string(), "GBP");
     }
 }
