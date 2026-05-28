@@ -1,3 +1,7 @@
+<!-- #[ptbr] Coisa a lembrar:
+ - [Link Text](path)
+
+-->
 # MUB Glossário — Linguagem Ubíqua do μBank
 
 $ \mu\$ $
@@ -8,7 +12,7 @@ $ \mu\$ $
 
 ## A
 
-### Account (Conta)
+### Account (ptbr: Conta)
 Entidade que representa uma conta bancária digital. Contém um identificador único (`AccountId`), um titular (`Customer`), um status (`AccountStatus`) e um saldo (`Balance`) derivado do ledger.
 
 **Regras:**
@@ -22,10 +26,10 @@ Enum: `Active | Frozen | Closed | PendingVerification`
 ### AccountHolder (Titular)
 Vínculo entre `Account` e `Customer`. Um `Customer` pode ter múltiplas contas.
 
-### AuditEvent (Evento de Auditoria)
+### AuditEvent (ptbr: Evento de Auditoria)
 Registro imutável de uma operação relevante para compliance. Inclui: timestamp, operador, ação, dados da operação, hash do evento anterior (encadeamento).
 
-### Authorization (Autorização)
+### Authorization (ptbr: Autorização)
 Aprovação ou negação de uma operação (transação, uso de cartão) com base em saldo, limite, perfil de risco e regras de compliance.
 
 
@@ -34,77 +38,77 @@ Aprovação ou negação de uma operação (transação, uso de cartão) com bas
 
 ## B
 
-### Balance (Saldo)
+### Balance (ptbr: Saldo)
 Valor monetário disponível em uma conta. **Nunca é armazenado** — é computado por agregação (`fold`) dos eventos do ledger.
 
-### BankSlip (Boleto)
+### BankSlip (ptbr: Boleto)
 Ordem de pagamento simulada, com código de barras, vencimento e valor. No modo LEARNING, não tem efeito legal.
 
-### Bounded Context (Contexto Delimitado)
+### Bounded Context (ptbr: Contexto Delimitado)
 Fronteira explícita de um modelo de domínio. O μBank define 8 contextos: `Identity`, `Accounts`, `Ledger`, `Payments`, `Cards`, `Credit`, `Education`, `Compliance`.
 
-### BudgetSimulation (Simulação Orçamentária)
+### BudgetSimulation (ptbr: Simulação Orçamentária)
 Ferramenta do modo LEARNING para planejar receitas e despesas simuladas com moeda MUB.
 
 ---
 
 ## C
 
-### Card (Cartão)
+### Card (ptbr: Cartão)
 Entidade que representa um cartão físico ou virtual. Vinculado a uma `Account`. Possui limite próprio, independente do saldo da conta.
 
-### CardLimit (Limite do Cartão)
+### CardLimit (ptbr: Limite do Cartão)
 Valor máximo que pode ser autorizado em transações com o cartão. Pode ser global ou por categoria.
 
-### CardTransaction (Transação de Cartão)
+### CardTransaction (ptbr: Transação de Cartão)
 Movimentação financeira realizada via cartão. Gera lançamento contábil e evento de autorização.
 
-### Compliance (Conformidade)
+### Compliance (ptbr: Conformidade)
 Conjunto de regras e processos para garantir operação dentro da lei (LGPD, BACEN, Open Finance). Inclui KYC, AML, relatórios regulatórios.
 
-### Consent (Consentimento)
+### Consent (ptbr: Consentimento)
 Registro da autorização explícita do `Customer` para uso de seus dados. Base da LGPD.
 
-### CreditAccount (Conta de Crédito)
+### CreditAccount (ptbr: Conta de Crédito)
 Linha de crédito associada a um `Customer`. Possui limite, taxa de juros, CET e parcelas.
 
-### Currency (Moeda)
+### Currency (ptbr: Moeda)
 Unidade monetária do sistema. Ver enum `Currency` em `mu_core`: `MUB | USD | EUR | BRL`.
 
-### Customer (Cliente)
+### Customer (ptbr: Cliente)
 Pessoa física ou jurídica titular de contas no μBank. Contém dados de identidade, documentos, perfil KYC e consentimentos.
 
 ---
 
 ## D
 
-### Document (Documento)
+### Document (ptbr: Documento)
 Representação digital de um documento de identificação (RG, CPF, CNPJ, passaporte). Usado no processo de KYC.
 
-### Domain Event (Evento de Domínio)
+### Domain Event (ptbr: Evento de Domínio)
 Ocorrência significativa no domínio, registrada de forma imutável. Ex: `AccountOpened`, `MoneyDeposited`, `TransferCompleted`.
 
-### Double-Entry (Partidas Dobradas)
+### Double-Entry (ptbr: Partidas Dobradas)
 Princípio contábil: toda movimentação financeira gera **dois** lançamentos simultâneos — um débito em uma conta contábil e um crédito em outra. O ledger do μBank segue este princípio.
 
 ---
 
 ## E
 
-### Education Layer (Camada Educacional)
+### Education Layer (ptbr: Camada Educacional)
 Módulo do modo LEARNING que fornece desafios financeiros, simulações orçamentárias, metas de aprendizado e conquistas gamificadas.
 
-### Event Sourcing (Fonte de Eventos)
-Padrão arquitetural onde o estado atual do sistema é derivado da reprodução de todos os eventos passados. O ledger do μBank é preparado para isso.
+### Event Sourcing (ptbr: Fonte de Eventos)
+Padrão arquitetural onde o estado atual do sistema é derivado da reprodução de todos os eventos passados. **O ledger (livro razão) do μBank é preparado para isso**.
 
 ---
 
 ## F
 
-### FinancialChallenge (Desafio Financeiro)
+### FinancialChallenge (ptbr: Desafio Financeiro)
 Missão gamificada no modo LEARNING. Ex: "Economize 1000 MUB em 30 dias", "Pague 5 boletos em dia".
 
-### FraudAlert (Alerta de Fraude)
+### FraudAlert (ptbr: Alerta de Fraude)
 Notificação gerada por regras ou heurísticas indicando atividade suspeita em uma conta ou transação.
 
 ### FraudDetectionService
@@ -114,69 +118,71 @@ Serviço de domínio responsável por analisar padrões, aplicar regras e emitir
 
 ## I
 
-### Identity (Identidade)
+### Identity (ptbr: Identidade)
 Contexto delimitado responsável por cadastro, autenticação, KYC e consentimento do `Customer`.
 
-### Installment (Parcela)
+### Installment (ptbr: Parcela)
 Divisão de um valor total em pagamentos periódicos. Usada em operações de crédito (`Loan`) e fatura de cartão.
 
-### InterestRate (Taxa de Juros)
+### InterestRate (ptbr: Taxa de Juros)
 Percentual aplicado sobre saldo devedor ou investimento. No modo LEARNING, usada para ensinar matemática financeira.
 
-### Invoice (Fatura)
+### Invoice (ptbr: Fatura)
 Resumo mensal das transações de `Card`, com valor total, data de vencimento e parcelas.
 
-### InternalTransfer (Transferência Interna)
+### InternalTransfer (ptbr: Transferência Interna)
 Movimentação de fundos entre contas do mesmo titular no μBank.
 
 ---
 
 ## J
 
-### JournalEntry (Lançamento Contábil)
+### JournalEntry (ptbr: Lançamento Contábil)
 Registro individual no ledger. Cada movimentação financeira gera ao menos duas entradas (débito/crédito). Imutável após registrada.
 
 ### JournalEntryId
 Identificador único (`UUID`) de um `JournalEntry`.
 
+Ver: [UUID](#UUID (Universally Unique Identifier))
+
 ---
 
 ## K
 
-### KYC (Know Your Customer ou Conheça Seu Cliente)
+### KYC (Know Your Customer) (ptbr: Conheça Seu Cliente)
 Processo de verificação de identidade do `Customer`. Inclui validação de documentos, biometria e checagem em listas restritivas.
 
 Obs.: É um conjunto de informações e documentos coletados por instituições financeiras para verificar a identidade dos clientes e avaliar os riscos de crimes como lavagem de dinheiro e financiamento ao terrorismo. Esse procedimento é obrigatório por lei e serve para garantir a segurança das transações e o cumprimento de normas regulatórias.
-### KycProfile (Perfil KYC)
+### KycProfile (ptbr: Perfil KYC)
 Estado do processo de verificação de um `Customer`. Pode ser: `Pending | Verified | Rejected | NeedsReview`.
 
 ---
 
 ## L
 
-### LearningGoal (Meta de Aprendizado)
+### LearningGoal (ptbr: Meta de Aprendizado)
 Objetivo financeiro definido por um estudante no modo LEARNING. Ex: "Entender juros compostos", "Criar orçamento mensal".
 
-### Ledger (Livro-Razão / Contábil)
+### Ledger (ptbr: Livro-Razão / Contábil)
 Registro imutável e cronológico de todas as movimentações financeiras do μBank. Baseado em partidas dobradas. É a **única fonte da verdade** para saldos.
 
-### LedgerAccount (Conta Contábil)
+### LedgerAccount (ptbr: Conta Contábil)
 Categoria no plano de contas do ledger. Ex: `Ativo.Caixa`, `Passivo.ContaCliente`, `Receita.Juros`. Não confundir com `Account` (conta bancária do cliente).
 
-### Loan (Empréstimo)
+### Loan (ptbr: Empréstimo)
 Operação de crédito com valor principal, taxa de juros, CET, número de parcelas e calendário de pagamento.
 
 ---
 
 ## M
 
-### MUB (Moeda do μBank)
+### MUB (ptbr: Moeda do μBank)
 Moeda fiduciária virtual do modo LEARNING. Código ISO 4217 privado: `999`. Símbolo: `µ`. Usada exclusivamente em ambiente sandbox educacional.
 
-### Money (Dinheiro)
+### Money (ptbr: Dinheiro)
 Tipo valor composto por `amount: Decimal` e `currency: Currency`. Toda operação aritmética valida: mesma moeda, sem _overflow_.
 
-### Modular Monolith (Monólito Modular)
+### Modular Monolith (ptbr: Monólito Modular)
 Arquitetura do μBank: um único processo com fronteiras de domínio bem definidas (crates), preparado para extração futura de microservices.
 
 ---
@@ -190,40 +196,40 @@ Sistema de compartilhamento de dados financeiros entre instituições autorizada
 
 ## P
 
-### PaymentOrder (Ordem de Pagamento)
+### PaymentOrder (ptbr: Ordem de Pagamento)
 Instrução para transferir fundos de uma conta para outra (mesmo titular ou terceiros).
 
-### PixTransfer (Transferência PIX)
+### PixTransfer (ptbr: Transferência PIX)
 Modalidade de transferência instantânea simulada no modo LEARNING. No futuro, poderá conectar-se à API real do PIX.
 
-### Posting (Lançamento)
+### Posting (ptbr: Lançamento)
 Ato de registrar uma entrada no ledger. Uma `Transaction` gera múltiplos `Postings` (débitos e créditos).
 
 ---
 
 ## R
 
-### RegulatoryReport (Relatório Regulatório)
+### RegulatoryReport (ptbr: Relatório Regulatório)
 Documento gerado para atender exigências de órgãos reguladores (BACEN, CVM). Inclui extrato de movimentações, suspeitas de lavagem, etc.
 
-### RiskProfile (Perfil de Risco)
+### RiskProfile (ptbr: Perfil de Risco)
 Classificação de um `Customer` quanto ao risco de crédito, fraude ou lavagem de dinheiro. Determinado por regras de compliance.
 
 ---
 
 ## S
 
-### SecurityEvent (Evento de Segurança)
+### SecurityEvent (ptbr: Evento de Segurança)
 Ocorrência relacionada à segurança do sistema: tentativa de acesso não autorizado, alteração de credenciais, detecção de anomalia.
 
-### SpendingInsight (Insight de Gastos)
+### SpendingInsight (ptbr: Insight de Gastos)
 Análise automatizada dos padrões de gasto de um `Customer`, usada na camada educacional para promover conscientização financeira.
 
 ---
 
 ## T
 
-### Transaction (Transação Financeira)
+### Transaction (ptbr: Transação Financeira)
 Movimentação de valor entre entidades do μBank. Ex: `Deposit`, `Withdraw`, `Transfer`, `Payment`. Toda transação gera `JournalEntry`(s) no ledger.
 
 **Regras:**
@@ -231,8 +237,36 @@ Movimentação de valor entre entidades do μBank. Ex: `Deposit`, `Withdraw`, `T
 - Toda transação tem um tipo, valor, moeda, origem, destino e timestamp
 - Transações entre moedas diferentes são barradas em runtime com `MoneyError::CurrencyMismatch`
 
-### Transfer (Transferência)
+### Transfer (ptbr: Transferência)
 Movimentação de fundos entre duas contas. Pode ser interna (mesmo titular) ou para terceiros.
+
+## U
+
+### UUID (Universally Unique Identifier)
+
+É um identificador padrão de 128 bits ($0$ a $2^{128}-1$) _utilizado no desenvolvimento de **software**_ para
+garantir a singularidade de informações em **sistemas distribuídos**, sem a necessidade de uma **coordenação central**.
+
+#### Características Principais
+- Singularidade: A probabilidade de dois `UUID`s serem idênticos é tão baixa que é considerada desprezível para fins práticos.
+- Estrutura: É representado como uma sequência de 32 dígitos hexadecimais {0, … 9, A, …, F} : a cada dois dígitos
+hexadeciamais temos 8 bits, 1 byte, o que significa que temos 16 bytes: 16 * 8 = 128 bits, divididos em cinco grupos]
+separados por hífens, no formato:8-4-4-4-12 (exemplo:123e4567-e89b-12d3-a456-426614174000).
+- Autonomia: Diferente de chaves primárias (_primary keys_) incrementais em bancos de dados (1, 2, 3...),
+o UUID pode ser gerado localmente por uma aplicação, garantindo que o ID será único mesmo quando integrado a outros
+sistemas futuramente.
+
+#### Versões Comuns
+1. **Versão 1 (Baseada no Tempo)**: Gerado a partir do **carimbo de data/hora (_timestamp_)** do sistema e
+do **endereço MAC** do dispositivo.
+2. **Versão 4 (Aleatória)**: Gerado quase inteiramente **a partir de números aleatórios** ou pseudo-aleatórios.
+**É a versão mais utilizada atualmente devido à sua simplicidade e privacidade**.
+3. **Versão 5 (Baseada em Nome/Hash)**: Gerado através do hash (SHA-1) de um nome e um namespace específico.
+
+#### Casos de Uso
+1. **Bancos de Dados**: Como chave primária para evitar conflitos de _ID_ durante a fusão de dados de diferentes servidores.
+2. **Sistemas Distribuídos**: Identificação de recursos, sessões de usuário e **_transações em arquiteturas de microsserviços_**.
+3. **Desenvolvimento Web**: Geração de nomes de arquivos únicos para _uploads_ ou _tokens_ de rastreamento.
 
 ---
 
