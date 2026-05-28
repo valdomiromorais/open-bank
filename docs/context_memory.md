@@ -1,6 +1,6 @@
 # Context Memory — Mu-Bank (μBank)
 
-> Última atualização: 2026-05-26
+> Última atualização: 2026-05-27
 
 ---
 
@@ -95,15 +95,22 @@ crates/
 
 ## 7. Progresso — Trimestre 1
 
-### ✅ Concluído
+### ✅ Concluído (2026-05-26)
 
 - `docs/MUB_GLOSSARY.md` — glossário com 40+ termos
 - `.github/PULL_REQUEST_TEMPLATE.md` — template de PR (GitHub Flow)
 - `docs/domain_design_document.md` — referência arquitetural absorvida
 - **`mu_core`**: `Account`, `Customer`, `Transaction`, `Ledger` modelados (29 testes)
 - **`mu_cli`**: demo funcional — cria cliente, conta, deposita, saca, transfere, extrato
-- **`Currency`**: expandido com `CNY` e `GBP` (6 moedas)
+- **`Currency`**: expandido com `CNY`, `GBP` e `JPY` (7 moedas — MUB, USD, EUR, BRL, CNY, GBP, JPY)
 - `README.md`, `docs/context_memory.md`, `docs/roadmap.md` — alinhados e sincronizados
+
+### ✅ Concluído (2026-05-27)
+
+- `docs/MUB_GLOSSARY.md` — anotações `#[ptbr]` em todos os headings, nova seção `UUID` detalhada, KYC expandido
+- `crates/mu_core/src/customer.rs` — `#[ptbr]` sobre Newtype pattern e UUID (128 bits, versões, formato 8-4-4-4-12)
+- `Currency::JPY` adicionado ao enum com símbolo `JP¥` (ISO 4217: 392)
+- **Observação:** glossário será traduzido para inglês futuramente (Interessado 1)
 
 ### 🔜 Próximos passos (próximas semanas)
 
