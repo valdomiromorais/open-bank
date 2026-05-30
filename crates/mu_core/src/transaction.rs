@@ -24,7 +24,7 @@ impl fmt::Display for TransactionId {
 }
 
 /// The nature of a financial transaction.
-/// #[ptbr] Define se é depósito, saque ou transferência entre contas.
+/// #[ptbr] Define se é depósito, saque, transferência ou estorno.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TransactionKind {
     Deposit,
@@ -32,6 +32,10 @@ pub enum TransactionKind {
     Transfer {
         from: AccountId,
         to: AccountId,
+    },
+    /// Reverses a previous transaction by referencing its ID.
+    Reversal {
+        original_tx: TransactionId,
     },
 }
 

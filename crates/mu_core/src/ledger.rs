@@ -23,6 +23,8 @@ pub enum LedgerError {
     },
     MoneyError(MoneyError),
     TransferToSameAccount,
+    TransactionNotFound(TransactionId),
+    OriginalAlreadyReversed(TransactionId),
 }
 
 impl std::fmt::Display for LedgerError {
@@ -57,6 +59,10 @@ impl std::fmt::Display for LedgerError {
             }
             LedgerError::MoneyError(e) => write!(f, "money error: {}", e),
             LedgerError::TransferToSameAccount => write!(f, "cannot transfer to the same account"),
+            LedgerError::TransactionNotFound(id) => write!(f, "transaction {} not found", id),
+            LedgerError::OriginalAlreadyReversed(id) => {
+                write!(f, "transaction {} has already been reversed", id)
+            }
         }
     }
 }
@@ -157,6 +163,36 @@ impl Ledger {
                         }
                     }
                 }
+                TransactionKind::Reversal { original_tx } => {
+                    if let Some(orig) = self.find_transaction(*original_tx) {
+                        let affects_this = orig.account_id() == account_id
+                            || matches!(orig.kind(), TransactionKind::Transfer { from, to }
+                                if *from == account_id || *to == account_id);
+                        if affects_this {
+                            match orig.kind() {
+                                TransactionKind::Deposit => {
+                                    balance = (balance - tx.amount())
+                                        .map_err(LedgerError::MoneyError)?;
+                                }
+                                TransactionKind::Withdraw => {
+                                    balance = (balance + tx.amount())
+                                        .map_err(LedgerError::MoneyError)?;
+                                }
+                                TransactionKind::Transfer { from, to } => {
+                                    if *from == account_id {
+                                        balance = (balance + tx.amount())
+                                            .map_err(LedgerError::MoneyError)?;
+                                    }
+                                    if *to == account_id {
+                                        balance = (balance - tx.amount())
+                                            .map_err(LedgerError::MoneyError)?;
+                                    }
+                                }
+                                TransactionKind::Reversal { .. } => {}
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -233,6 +269,39 @@ impl Ledger {
         Ok(id)
     }
 
+    /// Reverses a previous transaction.
+    /// #[ptbr] Estorno: cria uma nova transação que desfaz o efeito da original.
+    pub fn reversal(
+        &mut self,
+        original_tx: TransactionId,
+        description: String,
+    ) -> Result<TransactionId, LedgerError> {
+        let original = self
+            .find_transaction(original_tx)
+            .ok_or(LedgerError::TransactionNotFound(original_tx))?;
+
+        if self
+            .transactions
+            .iter()
+            .any(|t| matches!(t.kind(), TransactionKind::Reversal { original_tx: ot } if *ot == original_tx))
+        {
+            return Err(LedgerError::OriginalAlreadyReversed(original_tx));
+        }
+
+        let account_id = original.account_id();
+        self.ensure_can_transact(account_id, &original.amount())?;
+
+        let tx = Transaction::new(
+            account_id,
+            TransactionKind::Reversal { original_tx },
+            original.amount(),
+            description,
+        );
+        let id = tx.id();
+        self.transactions.push(tx);
+        Ok(id)
+    }
+
     pub fn all_transactions(&self) -> &[Transaction] {
         &self.transactions
     }
@@ -245,6 +314,10 @@ impl Ledger {
     }
 
     // --- Private helpers ---
+
+    fn find_transaction(&self, id: TransactionId) -> Option<&Transaction> {
+        self.transactions.iter().find(|tx| tx.id() == id)
+    }
 
     fn ensure_can_transact(
         &self,
@@ -377,6 +450,63 @@ mod tests {
         ledger.deposit(account, mub(dec!(200)), "b".into()).unwrap();
         ledger.deposit(account, mub(dec!(50)), "c".into()).unwrap();
         assert_eq!(ledger.balance(account).unwrap(), mub(dec!(350)));
+    }
+
+    #[test]
+    fn test_reversal_of_deposit() {
+        let (mut ledger, _customer, account) = setup();
+        let dep = ledger.deposit(account, mub(dec!(500)), "dep".into()).unwrap();
+        let rev = ledger.reversal(dep, "estorno".into()).unwrap();
+
+        assert_eq!(ledger.balance(account).unwrap(), mub(dec!(0)));
+        assert_eq!(ledger.all_transactions().len(), 2);
+
+        let rev_tx = ledger.all_transactions().iter().find(|t| t.id() == rev).unwrap();
+        assert_eq!(rev_tx.kind(), &TransactionKind::Reversal { original_tx: dep });
+    }
+
+    #[test]
+    fn test_reversal_of_withdraw() {
+        let (mut ledger, _customer, account) = setup();
+        ledger.deposit(account, mub(dec!(300)), "dep".into()).unwrap();
+        let wd = ledger.withdraw(account, mub(dec!(100)), "saque".into()).unwrap();
+        let _rev = ledger.reversal(wd, "estorno saque".into()).unwrap();
+
+        assert_eq!(ledger.balance(account).unwrap(), mub(dec!(300)));
+    }
+
+    #[test]
+    fn test_reversal_of_transfer() {
+        let mut ledger = Ledger::new();
+        let cid = ledger.create_customer("Alice".into());
+        let a = ledger.create_account(cid, Currency::MUB).unwrap();
+        let b = ledger.create_account(cid, Currency::MUB).unwrap();
+        ledger.activate_account(a).unwrap();
+        ledger.activate_account(b).unwrap();
+
+        ledger.deposit(a, mub(dec!(500)), "dep".into()).unwrap();
+        let t = ledger.transfer(a, b, mub(dec!(200)), "pix".into()).unwrap();
+        let _rev = ledger.reversal(t, "estorno pix".into()).unwrap();
+
+        assert_eq!(ledger.balance(a).unwrap(), mub(dec!(500)));
+        assert_eq!(ledger.balance(b).unwrap(), mub(dec!(0)));
+    }
+
+    #[test]
+    fn test_reversal_twice_rejected() {
+        let (mut ledger, _customer, account) = setup();
+        let dep = ledger.deposit(account, mub(dec!(100)), "dep".into()).unwrap();
+        ledger.reversal(dep, "rev".into()).unwrap();
+        let result = ledger.reversal(dep, "rev2".into());
+        assert_eq!(result, Err(LedgerError::OriginalAlreadyReversed(dep)));
+    }
+
+    #[test]
+    fn test_reversal_nonexistent_tx() {
+        let mut ledger = Ledger::new();
+        let phantom = TransactionId::new();
+        let result = ledger.reversal(phantom, "ghost".into());
+        assert_eq!(result, Err(LedgerError::TransactionNotFound(phantom)));
     }
 
     #[test]
