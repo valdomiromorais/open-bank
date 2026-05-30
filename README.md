@@ -36,9 +36,10 @@ Três interessados coexistem no μBank:
 ## Estado atual do cofre
 
 - ✅ Workspace Rust — 9 crates, resolver 3, compile em paralelo
-- ✅ `mu_core` — `Currency` (MUB, USD, EUR, BRL) + `Money` (`rust_decimal`, Add/Sub com `Result`, 13 testes)
+- ✅ `mu_core` — `Currency` (MUB, USD, EUR, BRL, CNY, GBP, JPY) + `Money` (`rust_decimal`, Add/Sub com `Result`) + `Account`, `Customer`, `Transaction`, `Ledger` — 37 testes
+- ✅ Estorno (`TransactionKind::Reversal`) — reversão de Deposit/Withdraw/Transfer com bloqueio de dupla reversão
 - 🟡 Demais crates — stubs, aguardando ativação
-- 📚 Documentação viva em `docs/` (roadmap, context memory, branding, briefings)
+- 📚 Documentação viva em `docs/` (roadmap, context memory, branding, briefings, temas JetBrains)
 
 ---
 

@@ -12,6 +12,8 @@
 
 ---
 
+> **Extras executados:** `TransactionKind::Reversal` + `Ledger.reversal()` (estorno, dupla reversão bloqueada), refatoração de construtores (`new()` auto-gera ID, `with_id()` para restauração), temas JetBrains, arquitetura visual renderizada, 37 testes
+
 ### TRIMESTRE 1: FUNDAÇÕES & O BERÇO DO MU (Mês 1-3)
 
 **Tema: O mundo do dinheiro digital. Domar Rust com segurança. O primeiro kernel bancário.**

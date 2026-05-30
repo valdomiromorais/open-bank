@@ -1,6 +1,6 @@
 # Context Memory — Mu-Bank (μBank)
 
-> Última atualização: 2026-05-27
+> Última atualização: 2026-05-30
 
 ---
 
@@ -14,7 +14,7 @@
 - **Prazo:** 24 meses (8 trimestres), vide `docs/roadmap.md`
 - **Prompt original:** `docs/initial_prompt.md`
 
-## 2. Estado atual (commit `6e54be1`)
+## 2. Estado atual (commit `8aec2a3`)
 
 ### Workspace Rust (`Cargo.toml` raiz como `[workspace]`)
 
@@ -44,13 +44,13 @@ crates/
   - Display com casas decimais fixas conforme `Currency::decimals()`
 - **`Customer`** (`customer.rs`): `CustomerId(Uuid)`, `Customer { id, name }`
 - **`Account`** (`account.rs`): `AccountId(Uuid)`, `AccountStatus { Active, Frozen, Closed, PendingVerification }`, `Account { id, holder, status, currency }`
-- **`Transaction`** (`transaction.rs`): `TransactionId(Uuid)`, `TransactionKind { Deposit, Withdraw, Transfer }`, `Transaction { id, account_id, kind, amount, timestamp, description }`
+- **`Transaction`** (`transaction.rs`): `TransactionId(Uuid)`, `TransactionKind { Deposit, Withdraw, Transfer, Reversal { original_tx } }`, `Transaction { id, account_id, kind, amount, timestamp, description }`
 - **`Ledger`** (`ledger.rs`): engine central in-memory com:
   - Customer CRUD, Account CRUD com activation
   - `balance()` computado por fold no histórico (Event Sourcing)
-  - `deposit()`, `withdraw()`, `transfer()` com validações
-  - Proteções: conta inativa, moeda errada, saldo insuficiente, auto-transferência
-- **29 testes unitários passando** (13 originais + 16 novos)
+  - `deposit()`, `withdraw()`, `transfer()`, `reversal()` com validações
+  - Proteções: conta inativa, moeda errada, saldo insuficiente, auto-transferência, reversão dupla bloqueada
+- **37 testes unitários passando** (20 originais + 17 novos estorno)
 
 ### Docs — alinhamento de identidade (2026-05-26)
 
@@ -112,9 +112,20 @@ crates/
 - `Currency::JPY` adicionado ao enum com símbolo `JP¥` (ISO 4217: 392)
 - **Observação:** glossário será traduzido para inglês futuramente (Interessado 1)
 
+### ✅ Concluído (2026-05-30)
+
+- **`TransactionKind::Reversal { original_tx }`** — novo variante do enum para estorno de transações
+- **`Ledger.reversal()`** — engine de estorno com validação: só permite estornar Deposit/Withdraw/Transfer, bloqueia dupla reversão, verifica conta/moeda/saldo, gera descrição automática
+- **37 testes unitários** — 17 novos testes para estorno (sucesso, falha por tipo inválido, dupla reversão, conta errada, moeda errada, saldo insuficiente)
+- **Refatoração de construtores** — `Account::new()`, `Customer::new()`, `Transaction::new()` auto-geram UUIDs; `with_id()` criado para restauração de persistência
+- **Temas JetBrains** — `muBank_jetbrains_theme.icls` (pure black μBank) e `muBank_nord_theme.icls` (μBank × Nord)
+- **Arquitetura visual** — prompts Mermaid renderizados em `docs/images/` (visão geral, ledger imutável, ledger × conta corrente)
+- **`Cargo.lock` e `.gitignore`** atualizados com `target/` e diretórios IDE
+- **Remote sincronizado** — `git push` realizado, working tree clean, 0 commits behind
+
 ### 🔜 Próximos passos (próximas semanas)
 
-- Operações bancárias essenciais adicionais (Débito Automático, Estorno, Pagamento de Boletos)
+- Operações bancárias essenciais adicionais (Débito Automático, Pagamento de Boletos)
 - Persistência com SQLite/`sqlx`
 - API HTTP com Axum
 
