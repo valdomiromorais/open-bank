@@ -1,5 +1,5 @@
 # μBank - um cripto openbank
-> Banco digital mais seguro da Terra — um cofre blindado por design
+> Banco digital mais **seguro da Terra** — um cofre blindado por design
 
 ### O Roadmap do Mu-Bank (μBank): 24 Meses em 8 Arcos
 

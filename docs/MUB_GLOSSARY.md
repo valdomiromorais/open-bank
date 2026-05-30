@@ -78,6 +78,13 @@ Unidade monetária do sistema. Ver enum `Currency` em `mu_core`: `MUB | USD | EU
 ### Customer (ptbr: Cliente)
 Pessoa física ou jurídica titular de contas no μBank. Contém dados de identidade, documentos, perfil KYC e consentimentos.
 
+### Cibersecurity (ptbr: cibersegurança)
+
+A cibersegurança (ou segurança cibernética) é **a prática de proteger redes, sistemas, dispositivos, aplicações e dados**
+contra acessos não autorizados, ataques e danos digitais.
+Ela garante a segurança das informações corporativas e pessoais através de tecnologia, processos e políticas
+
+
 ---
 
 ## D
@@ -99,7 +106,22 @@ Princípio contábil: toda movimentação financeira gera **dois** lançamentos 
 Módulo do modo LEARNING que fornece desafios financeiros, simulações orçamentárias, metas de aprendizado e conquistas gamificadas.
 
 ### Event Sourcing (ptbr: Fonte de Eventos)
-Padrão arquitetural onde o estado atual do sistema é derivado da reprodução de todos os eventos passados. **O ledger (livro razão) do μBank é preparado para isso**.
+Padrão arquitetural onde **o estado atual do sistema é derivado da reprodução de todos os eventos passados**.
+
+Event Sourcing (ou Fonte de Eventos) é um **padrão de arquitetura de software** onde as mudanças no estado de uma aplicação
+são armazenadas como uma **sequência linear de eventos imutáveis**, em vez de salvar apenas o estado atual em um banco
+de dados tradicional.
+
+**O ledger (livro razão) do μBank é preparado para isso**.
+
+#### Vantagens do Event Sourcing
+1. **Histórico e Auditoria Perfeitos**:\
+   O _**Event Store**_ funciona como um **livro-razão contábil nativo**. Nenhuma informação sobre o passado é descartada.
+2. **Consultas Temporais (Time Travel)**:\
+   É possível reconstruir o **estado exato do sistema** em qualquer minuto ou dia do passado bastando interromper a
+   reprodução dos eventos naquele ponto.
+3. **Alta Performance de Escrita**: \
+   Inserções no Event Store são operações puras de APPEND (anexar no fim do arquivo/banco). Não existem travas de registros (locks) por atualizações complexas.Depuração Avançada: Se ocorrer um erro em produção, os desenvolvedores podem extrair a lista de eventos e reproduzi-la em um ambiente local de testes para isolar a falha exata.
 
 ---
 
@@ -203,7 +225,21 @@ serviços autônomos de forma muito mais suave do que partindo de um monólito "
 3. **Organização de Equipes**: Permite que diferentes equipes fiquem responsáveis por módulos ou domínios isolados,
 reduzindo conflitos no código.
 
-Arquitetura do μBank: um único processo com **fronteiras de domínio** bem definidas (crates), preparado para **extração futura de microservices**.
+### Arquitetura do μBank
+o μBank nasce como um **monólito modular**. Um único processo com **fronteiras de domínio** bem definidas (crates),
+preparado para **extração futura de microservices**.
+
+Isso permite definir **fronteiras claras** entre os domínios sem a **latência e a complexidade de rede inicial**,
+facilitando uma migração futura para **serviços distribuídos**.
+
+
+### Microsserviços (Arquitetura)
+A arquitetura de microsserviços é uma abordagem de desenvolvimento de software em que **uma aplicação grande é dividida
+em um conjunto de pequenos serviços independentes e altamente especializados, que se comunicam entre si por meio de APIs**.
+Diferente do modelo **tradicional monolítico** — onde todo o sistema roda em um único bloco de código unificado —,
+cada microsserviço cuida de apenas uma **_função de negócio_** e possui seu próprio banco de dados isolado.
+
+
 
 ---
 

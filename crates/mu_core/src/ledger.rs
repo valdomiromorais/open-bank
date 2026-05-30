@@ -82,8 +82,8 @@ impl Ledger {
     // --- Customer operations ---
 
     pub fn create_customer(&mut self, name: String) -> CustomerId {
-        let id = CustomerId::new();
-        let customer = Customer::new(id, name);
+        let customer = Customer::new(name);
+        let id = customer.id();
         self.customers.insert(id, customer);
         id
     }
@@ -102,8 +102,8 @@ impl Ledger {
         if !self.customers.contains_key(&holder) {
             return Err(LedgerError::CustomerNotFound(holder));
         }
-        let id = AccountId::new();
-        let account = Account::new(id, holder, currency);
+        let account = Account::new(holder, currency);
+        let id = account.id();
         self.accounts.insert(id, account);
         Ok(id)
     }
@@ -173,13 +173,7 @@ impl Ledger {
     ) -> Result<TransactionId, LedgerError> {
         self.ensure_can_transact(account_id, &amount)?;
 
-        let tx = Transaction::new(
-            TransactionId::new(),
-            account_id,
-            TransactionKind::Deposit,
-            amount,
-            description,
-        );
+        let tx = Transaction::new(account_id, TransactionKind::Deposit, amount, description);
         let id = tx.id();
         self.transactions.push(tx);
         Ok(id)
@@ -203,13 +197,7 @@ impl Ledger {
             });
         }
 
-        let tx = Transaction::new(
-            TransactionId::new(),
-            account_id,
-            TransactionKind::Withdraw,
-            amount,
-            description,
-        );
+        let tx = Transaction::new(account_id, TransactionKind::Withdraw, amount, description);
         let id = tx.id();
         self.transactions.push(tx);
         Ok(id)
@@ -239,13 +227,7 @@ impl Ledger {
             });
         }
 
-        let tx = Transaction::new(
-            TransactionId::new(),
-            from,
-            TransactionKind::Transfer { from, to },
-            amount,
-            description,
-        );
+        let tx = Transaction::new(from, TransactionKind::Transfer { from, to }, amount, description);
         let id = tx.id();
         self.transactions.push(tx);
         Ok(id)

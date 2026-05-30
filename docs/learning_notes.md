@@ -1,11 +1,13 @@
 # Learning Note
-> Anota é preciso
+> Anotar é preciso
 
 ---
 
+
+
 ## Rust Notes
 
-1.
+1. Arrays ("[ ]") e string em Rust índexam a partir de 0 
 
 ---
 

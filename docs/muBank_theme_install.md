@@ -24,19 +24,19 @@
 
 ## Paleta híbrida (μBank × Nord)
 
-| Função | Cor | Hex | Origem |
-|--------|-----|-----|--------|
-| Fundo editor | Azul petróleo escuro | `#2E3440` | Nord |
-| Painéis, sidebar | Azul petróleo médio | `#3B4252` | Nord |
-| Seleção | Azul petróleo claro | `#434C5E` | Nord |
-| Linhas, comentários | Azul acinzentado | `#4C566A` | Nord |
-| Texto | Branco gelo | `#D8DEE9` | Nord |
-| **Keywords** | **Verde terminal** | **`#00FF41`** | **μBank** |
-| **Strings, constantes** | **Dourado frio** | **`#D4AF37`** | **μBank** |
-| **Números, tipos, macros** | **Ciano militar** | **`#00E5FF`** | **μBank** |
-| **Erros** | **Vermelho sangue** | **`#FF0040`** | **μBank** |
-| Lifetimes, atributos | Lilás Nord | `#B48EAD` | Nord |
-| Cursor | Verde terminal | `#00FF41` | μBank |
+| Função                     | Cor                  | Hex           | Origem    |
+|----------------------------|----------------------|---------------|-----------|
+| Fundo editor               | Azul petróleo escuro | `#2E3440`     | Nord      |
+| Painéis, sidebar           | Azul petróleo médio  | `#3B4252`     | Nord      |
+| Seleção                    | Azul petróleo claro  | `#434C5E`     | Nord      |
+| Linhas, comentários        | Azul acinzentado     | `#4C566A`     | Nord      |
+| Texto                      | Branco gelo          | `#D8DEE9`     | Nord      |
+| **Keywords**               | **Verde terminal**   | **`#00FF41`** | **μBank** |
+| **Strings, constantes**    | **Dourado frio**     | **`#D4AF37`** | **μBank** |
+| **Números, tipos, macros** | **Ciano militar**    | **`#00E5FF`** | **μBank** |
+| **Erros**                  | **Vermelho sangue**  | **`#FF0040`** | **μBank** |
+| Lifetimes, atributos       | Lilás Nord           | `#B48EAD`     | Nord      |
+| Cursor                     | Verde terminal       | `#00FF41`     | μBank     |
 
 ## Cobertura (ambos os temas)
 

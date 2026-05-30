@@ -27,7 +27,7 @@
 ╚══════════════════════════════════════════════════════════╝
 ```
 
-¹  _grupo de especialistas em segurança cibernética que atua como atacante ético_
+¹ _grupo de especialistas em segurança cibernética que atua como atacante ético_
 
 ---
 

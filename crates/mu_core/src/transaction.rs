@@ -14,9 +14,11 @@ impl TransactionId {
     }
 }
 
+// Uma Warning: código dublicado com AccountId
 impl fmt::Display for TransactionId {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = self.0.to_string();
+        // short display: first 8 chars (&s[..8]) .. and 4 last
         write!(f, "{}..{}", &s[..8], &s[s.len() - 4..])
     }
 }
@@ -46,7 +48,25 @@ pub struct Transaction {
 }
 
 impl Transaction {
+    /// Creates a new transaction with an auto-generated ID.
     pub fn new(
+        account_id: AccountId,
+        kind: TransactionKind,
+        amount: Money,
+        description: String,
+    ) -> Self {
+        Transaction {
+            id: TransactionId::new(),
+            account_id,
+            kind,
+            amount,
+            timestamp: Utc::now(),
+            description,
+        }
+    }
+
+    /// Creates a transaction with a specific ID (for persistence restoration).
+    pub fn with_id(
         id: TransactionId,
         account_id: AccountId,
         kind: TransactionKind,
@@ -98,20 +118,10 @@ mod tests {
         Money::new(amount, Currency::MUB)
     }
 
-    fn aid() -> AccountId {
-        AccountId::new()
-    }
-
     #[test]
     fn test_deposit_transaction() {
-        let acc = aid();
-        let tx = Transaction::new(
-            TransactionId::new(),
-            acc,
-            TransactionKind::Deposit,
-            mub(dec!(500)),
-            "Initial deposit".into(),
-        );
+        let acc = AccountId::new();
+        let tx = Transaction::new(acc, TransactionKind::Deposit, mub(dec!(500)), "Initial deposit".into());
         assert_eq!(tx.account_id(), acc);
         assert_eq!(tx.amount(), mub(dec!(500)));
         assert_eq!(tx.kind(), &TransactionKind::Deposit);
@@ -119,15 +129,17 @@ mod tests {
 
     #[test]
     fn test_transfer_transaction() {
-        let from = aid();
-        let to = aid();
-        let tx = Transaction::new(
-            TransactionId::new(),
-            from,
-            TransactionKind::Transfer { from, to },
-            mub(dec!(100)),
-            "Pix transfer".into(),
-        );
+        let from = AccountId::new();
+        let to = AccountId::new();
+        let tx = Transaction::new(from, TransactionKind::Transfer { from, to }, mub(dec!(100)), "Pix transfer".into());
         assert_eq!(tx.description(), "Pix transfer");
+    }
+
+    #[test]
+    fn test_transaction_with_id() {
+        let id = TransactionId::new();
+        let acc = AccountId::new();
+        let tx = Transaction::with_id(id, acc, TransactionKind::Deposit, mub(dec!(50)), "restored".into());
+        assert_eq!(tx.id(), id);
     }
 }
