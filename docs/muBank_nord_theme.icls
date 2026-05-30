@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE scheme PUBLIC "//JetBrains//IDE Color Scheme//EN" "">
+<scheme name="μBank × Nord — Blindado por Design" version="142" parent_scheme="Darcula">
+  <metaInfo>
+    <property name="ide" value="IntelliJ IDEA" />
+  </metaInfo>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- μBank × Nord — Hybrid Theme                           -->
+  <!--                                                       -->
+  <!-- Base:   Nord Darker   (fundos azul-escuros suaves)    -->
+  <!-- Acentos: μBank        (verde terminal, ouro, ciano)  -->
+  <!--                                                       -->
+  <!-- Nord Darker:                                           -->
+  <!--   #2E3440  Fundo do editor                            -->
+  <!--   #3B4252  Painéis, sidebar                           -->
+  <!--   #434C5E  Seleção, hover                             -->
+  <!--   #4C566A  UI borders, line numbers, comments         -->
+  <!--   #D8DEE9  Texto corrido                              -->
+  <!--                                                       -->
+  <!-- μBank:                                                 -->
+  <!--   #00FF41  Keywords (verde terminal)                  -->
+  <!--   #D4AF37  Strings, constantes (dourado frio)         -->
+  <!--   #00E5FF  Numbers, types, macros (ciano militar)     -->
+  <!--   #FF0040  Errors (vermelho sangue)                   -->
+  <!--   #B48EAD  Lifetimes, attributes (Nord purple)        -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+
+  <colors>
+    <option name="BORDER_COLOR" value="4C566A" />
+    <option name="BUTTON_DEFAULT_START_COLOR" value="D4AF37" />
+    <option name="BUTTON_DEFAULT_END_COLOR" value="2E3440" />
+    <option name="BUTTON_START_COLOR" value="3B4252" />
+    <option name="BUTTON_END_COLOR" value="2E3440" />
+    <option name="BUTTON_FOCUSED_START_COLOR" value="00FF41" />
+    <option name="BUTTON_FOCUSED_END_COLOR" value="2E3440" />
+    <option name="BUTTON_FOCUSED_BORDER_COLOR" value="00FF41" />
+    <option name="CARET_COLOR" value="00FF41" />
+    <option name="CARET_ROW_COLOR" value="2E3440" />
+    <option name="COLLAPSIBLE_PANEL_BACKGROUND" value="3B4252" />
+    <option name="CONSOLE_BACKGROUND" value="2E3440" />
+    <option name="CONSOLE_CARET_COLOR" value="00FF41" />
+    <option name="CONSOLE_FOREGROUND" value="D8DEE9" />
+    <option name="CONSOLE_SELECTION_BACKGROUND" value="00FF41" />
+    <option name="CONSOLE_SELECTION_FOREGROUND" value="2E3440" />
+    <option name="DOCUMENTATION_BACKGROUND" value="3B4252" />
+    <option name="ERROR_COLOR" value="FF0040" />
+    <option name="FILESTATUS_ADDED" value="00FF41" />
+    <option name="FILESTATUS_DELETED" value="FF0040" />
+    <option name="FILESTATUS_MODIFIED" value="00E5FF" />
+    <option name="FILESTATUS_RENAMED" value="D4AF37" />
+    <option name="FILESTATUS_UNKNOWN" value="4C566A" />
+    <option name="GUTTER_BACKGROUND" value="2E3440" />
+    <option name="HIGHLIGHTED_BORDER_COLOR" value="00FF41" />
+    <option name="HYPERLINK_COLOR" value="00E5FF" />
+    <option name="HYPERLINK_VISITED_COLOR" value="D4AF37" />
+    <option name="INACTIVE_HYPERLINK_COLOR" value="4C566A" />
+    <option name="INFORMATION_COLOR" value="00E5FF" />
+    <option name="INLINE_INDICATOR_COLOR" value="00FF41" />
+    <option name="LINE_NUMBERS_COLOR" value="4C566A" />
+    <option name="METHOD_SEPARATOR_COLOR" value="3B4252" />
+    <option name="MODIFIED_TAB_COLOR" value="00FF41" />
+    <option name="NOTIFICATION_BACKGROUND" value="3B4252" />
+    <option name="POPUP_BORDER_COLOR" value="00FF41" />
+    <option name="SEARCH_RESULT_ATTRIBUTES" value="FF0040" />
+    <option name="SELECTED_ITEM_BACKGROUND" value="434C5E" />
+    <option name="SELECTED_TAB_COLOR" value="2E3440" />
+    <option name="SELECTION_BACKGROUND" value="434C5E" />
+    <option name="SELECTION_FOREGROUND" value="00FF41" />
+    <option name="SMART_DIFF_DELETED" value="FF0040" />
+    <option name="SMART_DIFF_INSERTED" value="00FF41" />
+    <option name="SMART_DIFF_MODIFIED" value="00E5FF" />
+    <option name="SORTED_TEXT_COLOR" value="00FF41" />
+    <option name="TAB_BORDER_COLOR" value="4C566A" />
+    <option name="TABLE_BACKGROUND" value="2E3440" />
+    <option name="TABLE_COLUMN_SEPARATOR" value="4C566A" />
+    <option name="TABLE_LINE_NUMBERS_BACKGROUND" value="2E3440" />
+    <option name="TEXT_CARRET_COLOR" value="00FF41" />
+    <option name="TOOLTIP_BACKGROUND" value="3B4252" />
+    <option name="TOOLTIP_FOREGROUND" value="D8DEE9" />
+    <option name="TREE_SELECTION_BACKGROUND" value="434C5E" />
+    <option name="TREE_SELECTION_FOREGROUND" value="00FF41" />
+    <option name="WHITESPACE_COLOR" value="4C566A" />
+    <option name="WARNING_COLOR" value="D4AF37" />
+  </colors>
+
+  <attributes>
+    <!-- ── General Syntax ── -->
+    <option name="DEFAULT_TAG">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_IDENTIFIER">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_NUMBER">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="DEFAULT_STRING">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="DEFAULT_CHAR">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="DEFAULT_OPERATION_SIGN">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="DEFAULT_PARENTHESIS">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_BRACKETS">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_BRACES">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_DOT">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_SEMICOLON">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_COMMA">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+      </value>
+    </option>
+    <option name="DEFAULT_KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="DEFAULT_CONSTANT">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="DEFAULT_BLOCK_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="4C566A" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="DEFAULT_LINE_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="4C566A" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="DEFAULT_DOC_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="4C566A" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="DEFAULT_DOC_COMMENT_TAG">
+      <value>
+        <option name="FOREGROUND" value="B48EAD" />
+      </value>
+    </option>
+    <option name="DEFAULT_INVALID_STRING_ESCAPE">
+      <value>
+        <option name="FOREGROUND" value="FF0040" />
+        <option name="EFFECT_TYPE" value="1" />
+        <option name="EFFECT_COLOR" value="FF0040" />
+      </value>
+    </option>
+
+    <!-- ── Rust Specific ── -->
+    <option name="RUST_KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="RUST_NUMBER">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="RUST_STRING">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="RUST_RAW_STRING">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="RUST_BYTE_STRING">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="RUST_LIFETIME">
+      <value>
+        <option name="FOREGROUND" value="B48EAD" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="RUST_MACRO">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="RUST_ATTRIBUTE">
+      <value>
+        <option name="FOREGROUND" value="B48EAD" />
+      </value>
+    </option>
+    <option name="RUST_BUILTIN_TYPE">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="RUST_SELF_KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="RUST_OPERATION_SIGN">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="RUST_CLOSURE_ARROW">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="RUST_MACRO_VARIABLE">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+
+    <!-- ── TOML ── -->
+    <option name="TOML_KEY">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="TOML_STRING">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="TOML_NUMBER">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="TOML_BOOLEAN">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+
+    <!-- ── Markdown ── -->
+    <option name="MARKDOWN_HEADING_LEVEL_1">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="MARKDOWN_HEADING_LEVEL_2">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+      </value>
+    </option>
+    <option name="MARKDOWN_HEADING_LEVEL_3">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="MARKDOWN_LIST_ITEM">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="MARKDOWN_CODE_SPAN">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="MARKDOWN_CODE_BLOCK">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+        <option name="BACKGROUND" value="2E3440" />
+      </value>
+    </option>
+    <option name="MARKDOWN_LINK">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+        <option name="EFFECT_TYPE" value="1" />
+        <option name="EFFECT_COLOR" value="00E5FF" />
+      </value>
+    </option>
+    <option name="MARKDOWN_BOLD">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="MARKDOWN_ITALIC">
+      <value>
+        <option name="FOREGROUND" value="D8DEE9" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="MARKDOWN_HR">
+      <value>
+        <option name="FOREGROUND" value="4C566A" />
+      </value>
+    </option>
+    <option name="MARKDOWN_TABLE_HEADER">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+
+    <!-- ── JSON ── -->
+    <option name="JSON_KEY">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="JSON_STRING">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="JSON_NUMBER">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="JSON_BOOLEAN">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="JSON_NULL">
+      <value>
+        <option name="FOREGROUND" value="FF0040" />
+      </value>
+    </option>
+
+    <!-- ── Git ── -->
+    <option name="GIT_ADDED">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+      </value>
+    </option>
+    <option name="GIT_DELETED">
+      <value>
+        <option name="FOREGROUND" value="FF0040" />
+      </value>
+    </option>
+    <option name="GIT_MODIFIED">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+      </value>
+    </option>
+    <option name="GIT_RENAMED">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+      </value>
+    </option>
+    <option name="GIT_UNTRACKED">
+      <value>
+        <option name="FOREGROUND" value="4C566A" />
+      </value>
+    </option>
+
+    <!-- ── Diff ── -->
+    <option name="DIFF_INSERTED">
+      <value>
+        <option name="FOREGROUND" value="00FF41" />
+        <option name="BACKGROUND" value="1a3b2e" />
+      </value>
+    </option>
+    <option name="DIFF_DELETED">
+      <value>
+        <option name="FOREGROUND" value="FF0040" />
+        <option name="BACKGROUND" value="3b1a1e" />
+      </value>
+    </option>
+    <option name="DIFF_MODIFIED">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+        <option name="BACKGROUND" value="1a2e3b" />
+      </value>
+    </option>
+
+    <!-- ── Search / Find ── -->
+    <option name="SEARCH_RESULT">
+      <value>
+        <option name="BACKGROUND" value="FF0040" />
+        <option name="FOREGROUND" value="2E3440" />
+      </value>
+    </option>
+    <option name="WRITE_SEARCH_RESULT">
+      <value>
+        <option name="BACKGROUND" value="D4AF37" />
+        <option name="FOREGROUND" value="2E3440" />
+      </value>
+    </option>
+    <option name="SEARCH_HIGHLIGHT">
+      <value>
+        <option name="BACKGROUND" value="434C5E" />
+      </value>
+    </option>
+
+    <!-- ── Errors & Warnings ── -->
+    <option name="ERRORS_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND" value="FF0040" />
+        <option name="EFFECT_TYPE" value="2" />
+        <option name="EFFECT_COLOR" value="FF0040" />
+      </value>
+    </option>
+    <option name="WARNING_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND" value="D4AF37" />
+        <option name="EFFECT_TYPE" value="2" />
+        <option name="EFFECT_COLOR" value="D4AF37" />
+      </value>
+    </option>
+    <option name="WEAK_WARNING_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND" value="4C566A" />
+        <option name="EFFECT_TYPE" value="2" />
+        <option name="EFFECT_COLOR" value="4C566A" />
+      </value>
+    </option>
+    <option name="INFORMATION_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND" value="00E5FF" />
+        <option name="EFFECT_TYPE" value="2" />
+        <option name="EFFECT_COLOR" value="00E5FF" />
+      </value>
+    </option>
+
+    <!-- ── Editor Tabs ── -->
+    <option name="TAB_BACKGROUND">
+      <value>
+        <option name="BACKGROUND" value="2E3440" />
+      </value>
+    </option>
+    <option name="TAB_SELECTED">
+      <value>
+        <option name="BACKGROUND" value="3B4252" />
+      </value>
+    </option>
+    <option name="TAB_HOVER">
+      <value>
+        <option name="BACKGROUND" value="434C5E" />
+      </value>
+    </option>
+  </attributes>
+</scheme>
