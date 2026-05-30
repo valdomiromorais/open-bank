@@ -3,7 +3,7 @@ use rust_decimal_macros::dec;
 
 fn main() {
     println!("╔══════════════════════════════════════╗");
-    println!("║     \x1b[32mμBank — CORE v0.1\x1b[0m              ║");
+    println!("║     \x1b[32mμBank — CORE v0.1\x1b[0m                ║");
     println!("╚══════════════════════════════════════╝");
     println!();
 

@@ -2,7 +2,11 @@
 
 > *Um cofre digital distribuído. Construído em Rust. Blindado por design.*
 
-**μBank** não é uma fintech colorida. É um **sistema financeiro de grade militar**, onde cada transação é verificada, cada moeda é tipada, e cada erro de domínio é capturado em compile-time — não em produção. Nada de curvas amigáveis. Arquitetura de **hardware security module**, estética red team, precisão criptográfica.
+**μBank** não é uma **fintech colorida**. É um **sistema financeiro de grade militar**, onde cada transação é verificada,
+cada moeda é tipada, e cada erro de domínio é capturado em compile-time — não em produção.
+Nada de curvas amigáveis. Arquitetura de **hardware security module**, estética [red team](docs/MUB_GLOSSARY.md#red-team), precisão criptográfica.
+
+
 
 Três interessados coexistem no μBank:
 

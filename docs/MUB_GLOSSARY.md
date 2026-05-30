@@ -183,7 +183,27 @@ Moeda fiduciária virtual do modo LEARNING. Código ISO 4217 privado: `999`. Sí
 Tipo valor composto por `amount: Decimal` e `currency: Currency`. Toda operação aritmética valida: mesma moeda, sem _overflow_.
 
 ### Modular Monolith (ptbr: Monólito Modular)
-Arquitetura do μBank: um único processo com fronteiras de domínio bem definidas (crates), preparado para extração futura de microservices.
+
+Um monólito modular **_é uma arquitetura de software_ onde a aplicação é escrita em uma _única base de código_ 
+(o monólito), mas é fortemente dividida em _módulos independentes_ com _limites lógicos bem definidos_**. 
+Ele entrega a organização e a coesão dos microsserviços, mas sem a complexidade operacional de rede e infraestrutura.
+
+#### Principais Conceitos
+1. **Base de Código Única**: Todo o sistema reside em um único repositório e é compilado e implantado junto.
+2. **Módulos de Domínio**: O sistema é **quebrado por áreas de negócio** (ex: Currency, Money, Customer).
+Cada módulo possui **sua própria regra de negócio encapsulada** e sabe exatamente o que expor para o resto do sistema.
+3. **Baixo Acoplamento**: As regras de um módulo não devem acessar diretamente o banco de dados ou as entranhas de
+outro módulo. A comunicação ocorre apenas por interfaces ou APIs bem definidas.
+
+#### Vantagens
+1. **Simplicidade Operacional**: Mais fácil de testar, versionar e fazer o deploy, já que você não precisa orquestrar
+dezenas de microsserviços na nuvem.
+2. **Fácil Evolução**: Se o negócio crescer, os módulos podem ser destacados e transformados em microsserviços ou
+serviços autônomos de forma muito mais suave do que partindo de um monólito "espaguete".
+3. **Organização de Equipes**: Permite que diferentes equipes fiquem responsáveis por módulos ou domínios isolados,
+reduzindo conflitos no código.
+
+Arquitetura do μBank: um único processo com **fronteiras de domínio** bem definidas (crates), preparado para **extração futura de microservices**.
 
 ---
 
@@ -214,6 +234,11 @@ Documento gerado para atender exigências de órgãos reguladores (BACEN, CVM). 
 
 ### RiskProfile (ptbr: Perfil de Risco)
 Classificação de um `Customer` quanto ao risco de crédito, fraude ou lavagem de dinheiro. Determinado por regras de compliance.
+
+### Red Team
+Um Red Team (equipe vermelha) é um grupo de **especialistas em segurança ofensiva** contratados para atuar como **hackers éticos**.
+A função deles é **simular ataques realistas e avançados para testar as defesas de uma organização**, expondo vulnerabilidades
+em pessoas, processos e tecnologias antes que criminosos reais as encontrem.
 
 ---
 

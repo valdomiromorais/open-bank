@@ -1,4 +1,6 @@
-Aia, eu gostaria de obter um roadmap para me especializar/atualizar em arquitetura/engenharia de _software_.
+Aia, meu nome é Valdomiro (Valdô pra vc e meus amigos).
+
+Eu gostaria de obter um roadmap para me especializar/atualizar em arquitetura/engenharia de _software_.
 Gostaria de focar em software de sistemas financeiros (fintech e bancos) e linguagens de sistema: Rust, C++ e C, nesta ordem de prioridade.
 Gostaria de um roteiro bastante completo e que se encaixe em 24 meses de estudo.
 Como resultado, quero um sistema bancário baseado no Nu-Bank, ou possível mente no Openbank do grupo Santander.
