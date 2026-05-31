@@ -1,5 +1,8 @@
 # μBank — Manifesto do Desenvolvedor
 
+> *“Apanhai-nos as raposas, as raposinhas, que fazem mal às vinhas, porque as nossas vinhas estão em flor.”*
+> — Cantares 2:15
+>
 > *Leia todo início de dia de desenvolvimento.*
 
 ```

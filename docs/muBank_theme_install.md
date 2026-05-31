@@ -2,10 +2,10 @@
 
 ## Temas disponíveis
 
-| Arquivo | Nome | Estilo |
-|---------|------|--------|
-| `muBank_jetbrains_theme.icls` | μBank — Blindado por Design | Fundo preto absoluto, acentos agressivos |
-| `muBank_nord_theme.icls` | μBank × Nord — Blindado por Design | Base Nord Darker (azul-escuro suave) + acentos μBank |
+| Arquivo                       | Nome                               | Estilo                                               |
+|-------------------------------|------------------------------------|------------------------------------------------------|
+| `muBank_jetbrains_theme.icls` | μBank — Blindado por Design        | Fundo preto absoluto, acentos agressivos             |
+| `muBank_nord_theme.icls`      | μBank × Nord — Blindado por Design | Base Nord Darker (azul-escuro suave) + acentos μBank |
 
 ### Qual escolher?
 

@@ -1,3 +1,7 @@
+// "Apanhai-nos as raposas, as raposinhas, que fazem mal às vinhas,
+//  porque as nossas vinhas estão em flor." — Cantares 2:15
+// Cada validação aqui é uma raposinha caçada.
+
 use crate::account::{Account, AccountId, AccountStatus};
 use crate::currency::Currency;
 use crate::customer::{Customer, CustomerId};

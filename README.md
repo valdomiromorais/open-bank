@@ -1,5 +1,8 @@
 # μBank — Seu dinheiro é código. Sua conta é uma chave privada.
 
+> *“Apanhai-nos as raposas, as raposinhas, que fazem mal às vinhas, porque as nossas vinhas estão em flor.”*
+> — Cantares 2:15
+>
 > *Um cofre digital distribuído. Construído em Rust. Blindado por design.*
 
 **μBank** não é uma **fintech colorida**. É um **sistema financeiro de grade militar**, onde cada transação é verificada,

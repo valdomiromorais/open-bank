@@ -9,7 +9,9 @@
 
 > _... foste **fiel no pouco**, sobre o muito te colocarei;..._ Mt 25:21 (Bíblia Sagrada)
 
-> _Não desprezem **os pequenos começos**, pois o Senhor se alegra ao ver a obra começar..._ Zc 4:10 (Bíblia Sagrada) 
+> _Não desprezem **os pequenos começos**, pois o Senhor se alegra ao ver a obra começar..._ Zc 4:10 (Bíblia Sagrada)
+
+>  _Apanhai-me as raposas, **as raposinhas, que fazem mal às vinhas**, porque as nossas vinhas estão em flor._
 
 ## 1. O que se sabe publicamente de alguns bancos digitais
 
