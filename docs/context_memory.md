@@ -55,7 +55,7 @@ crates/
 ### Docs — alinhamento de identidade (2026-05-26)
 
 - `README.md` reescrito com a vibe red team / cofre digital / cibersegurança agressiva
-- `docs/MANIFEST.md` criado — manifesto dopaminérgico diário do desenvolvedor
+- `docs/journal/MANIFEST.md` criado — manifesto dopaminérgico diário do desenvolvedor
 - `docs/domain_design_document.md` absorvido — define 8 bounded contexts, monólito modular, ledger imutável, eventos de domínio, partidas dobradas
 - Vibe consolidada: estética hardware security module, preto + verde terminal + dourado frio, "seu dinheiro é código, sua conta é uma chave privada"
 
@@ -159,6 +159,7 @@ A cada conclusão de tópico, os seguintes arquivos devem ser atualizados para r
 | `docs/context_memory.md` | Estado atual, decisões, convenções, próximos passos |
 | `docs/roadmap.md` | Progresso dos checklists, checkboxes marcados, ajustes de cronograma |
 | `README.md` | Visão geral, status dos crates, instruções de uso |
-| `docs/MANIFEST.md` | Manifesto do desenvolvedor — frase dopaminérgica diária e marcos |
+| `docs/journal/MANIFEST.md` | Manifesto do desenvolvedor — frase dopaminérgica diária e marcos |
+| `docs/journal/etica_pessoal.md` | Princípios éticos pessoais do desenvolvedor — sistema operacional emocional |
 
 Isso garante que a documentação nunca fique dessincronizada do código e que o Interessado 1 (e qualquer IA auxiliar) sempre tenha contexto fiel ao projeto real.
