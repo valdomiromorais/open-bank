@@ -8,7 +8,7 @@ use std::fmt;
 /// define códigos de três letras e de três dígitos para representar moedas e fundos no mundo todo.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Currency {
-    MUB,
+    MUB, //#[ptbr] Moeda interna do MuBank
     USD, //#[ptbr] Dólar americano
     EUR, //#[ptbr] Euro
     BRL, //#[ptbr] Real Brasileiro
@@ -59,8 +59,12 @@ impl Currency {
     }
 
     /// Number of decimal places for this currency.
+    /// JPY has 0 (no fractional subunit), all others use 2.
     pub fn decimals(&self) -> u8 {
-        2_u8
+        match self {
+            Currency::JPY => 0,
+            _ => 2,
+        }
     }
 
     /// Full name of the currency.
@@ -141,5 +145,16 @@ mod tests {
         assert_eq!(Currency::EUR.to_string(), "EUR");
         assert_eq!(Currency::GBP.to_string(), "GBP");
         assert_eq!(Currency::JPY.to_string(), "JPY");
+    }
+
+    #[test]
+    fn test_currency_decimals() {
+        assert_eq!(Currency::MUB.decimals(), 2);
+        assert_eq!(Currency::USD.decimals(), 2);
+        assert_eq!(Currency::EUR.decimals(), 2);
+        assert_eq!(Currency::BRL.decimals(), 2);
+        assert_eq!(Currency::CNY.decimals(), 2);
+        assert_eq!(Currency::GBP.decimals(), 2);
+        assert_eq!(Currency::JPY.decimals(), 0);
     }
 }

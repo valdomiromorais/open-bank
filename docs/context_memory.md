@@ -96,6 +96,7 @@ crates/
 | **DDD + Bounded Contexts** para modelagem de domínio | 8 contextos mapeados: Identity, Accounts, Ledger, Payments, Cards, Credit, Education, Compliance |
 | **Ledger imutável com partidas dobradas** | Toda movimentação financeira exige lançamento contábil correspondente (double-entry) |
 | **Eventos de domínio como cidadãos de primeira classe** | `CustomerRegistered`, `MoneyDeposited`, `TransferCompleted` etc. — base para audit trail e event sourcing futuro |
+| **Formatação de valores separada do domínio** | `Money::Display` NÃO terá separadores de milhar/locale — formatação é preocupação de apresentação. Uma função separada `format_money(money, locale)` em `mu_cli` ou `mu_api` será criada no futuro. |
 
 ## 4. Convenções de código
 
