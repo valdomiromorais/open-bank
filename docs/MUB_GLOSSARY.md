@@ -38,11 +38,17 @@ Aprovação ou negação de uma operação (transação, uso de cartão) com bas
 
 ## B
 
+### BaaS (Banking as a Service)
+Modelo de negócio onde o μBank expõe suas funcionalidades bancárias via API para terceiros (ERPs, fintechs parceiras). Inspirado no modelo da Conta Azul. O crate `mu_api` será desenhado para suportar esse modelo com chaves de API e versionamento.
+
 ### Balance (ptbr: Saldo)
 Valor monetário disponível em uma conta. **Nunca é armazenado** — é computado por agregação (`fold`) dos eventos do ledger.
 
 ### BankSlip (ptbr: Boleto)
 Ordem de pagamento simulada, com código de barras, vencimento e valor. No modo LEARNING, não tem efeito legal.
+
+### BNPL (Buy Now Pay Later)
+Modalidade de crédito que permite ao cliente comprar um bem e pagar parcelado sem cartão de crédito. Popularizado pelo Mercado Pago. Futuro `TransactionKind::Installment` no μBank.
 
 ### Bounded Context (ptbr: Contexto Delimitado)
 Fronteira explícita de um modelo de domínio. O μBank define 8 contextos: `Identity`, `Accounts`, `Ledger`, `Payments`, `Cards`, `Credit`, `Education`, `Compliance`.
@@ -62,6 +68,9 @@ Valor máximo que pode ser autorizado em transações com o cartão. Pode ser gl
 
 ### CardTransaction (ptbr: Transação de Cartão)
 Movimentação financeira realizada via cartão. Gera lançamento contábil e evento de autorização.
+
+### Cashback (ptbr: Dinheiro de Volta)
+Recompensa em MUB creditada ao `Customer` ao completar ações específicas no modo LEARNING (ex: poupar por N dias, completar missões financeiras). Inspirado em PicPay e Stone.
 
 ### Compliance (ptbr: Conformidade)
 Conjunto de regras e processos para garantir operação dentro da lei (LGPD, BACEN, Open Finance). Inclui KYC, AML, relatórios regulatórios.
@@ -255,6 +264,9 @@ Sistema de compartilhamento de dados financeiros entre instituições autorizada
 ### PaymentOrder (ptbr: Ordem de Pagamento)
 Instrução para transferir fundos de uma conta para outra (mesmo titular ou terceiros).
 
+### PCI-DSS (Payment Card Industry Data Security Standard)
+Conjunto de 12 requisitos de segurança para processamento de dados de cartão. Referência: PagBank mantém conformidade PCI-DSS. O μBank deve documentar quais requisitos se aplicam (Trimestre 4).
+
 ### PixTransfer (ptbr: Transferência PIX)
 Modalidade de transferência instantânea simulada no modo LEARNING. No futuro, poderá conectar-se à API real do PIX.
 
@@ -328,6 +340,20 @@ do **endereço MAC** do dispositivo.
 1. **Bancos de Dados**: Como chave primária para evitar conflitos de _ID_ durante a fusão de dados de diferentes servidores.
 2. **Sistemas Distribuídos**: Identificação de recursos, sessões de usuário e **_transações em arquiteturas de microsserviços_**.
 3. **Desenvolvimento Web**: Geração de nomes de arquivos únicos para _uploads_ ou _tokens_ de rastreamento.
+
+### UTC (ptbr: Tempo Universal Coordenado)
+
+O UTC (Tempo Universal Coordenado) é o fuso horário de referência global, baseado em relógios atômicos.
+Ele substituiu o antigo GMT (Tempo Médio de Greenwich). Todos os fusos horários do mundo são calculados
+como adição ou subtração de horas em relação ao UTC (ex: \(UTC -3\) ou \(UTC +1\)). Para verificar a hora
+exata no meridiano de referência ou em sua localização, acerte seus relógios através do Time.is ou consulte
+o Time and Date.
+
+No Brasil: A maior parte do país, incluindo Petrolina–PE, está no fuso UTC-3 (3 horas
+atrasado em relação ao horário base do UTC).
+
+Em Portugal: O território continental opera no horário UTC
+durante o inverno e muda para UTC+1 durante o horário de verão europeu.
 
 ---
 

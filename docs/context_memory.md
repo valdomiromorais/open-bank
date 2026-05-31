@@ -59,6 +59,29 @@ crates/
 - `docs/domain_design_document.md` absorvido — define 8 bounded contexts, monólito modular, ledger imutável, eventos de domínio, partidas dobradas
 - Vibe consolidada: estética hardware security module, preto + verde terminal + dourado frio, "seu dinheiro é código, sua conta é uma chave privada"
 
+### ✅ Concluído (2026-05-30)
+
+- **`TransactionKind::Reversal { original_tx }`** — novo variante do enum para estorno de transações
+- **`Ledger.reversal()`** — engine de estorno com validação: só permite estornar Deposit/Withdraw/Transfer, bloqueia dupla reversão, verifica conta/moeda/saldo, gera descrição automática
+- **37 testes unitários** — 17 novos testes para estorno (sucesso, falha por tipo inválido, dupla reversão, conta errada, moeda errada, saldo insuficiente)
+- **Refatoração de construtores** — `Account::new()`, `Customer::new()`, `Transaction::new()` auto-geram UUIDs; `with_id()` criado para restauração de persistência
+- **Temas JetBrains** — `muBank_jetbrains_theme.icls` (pure black μBank) e `muBank_nord_theme.icls` (μBank × Nord)
+- **Arquitetura visual** — prompts Mermaid renderizados em `docs/images/` (visão geral, ledger imutável, ledger × conta corrente)
+- **`Cargo.lock` e `.gitignore`** atualizados com `target/` e diretórios IDE
+- **Remote sincronizado** — `git push` realizado, working tree clean, 0 commits behind
+- **`docs/FINTECHS.md`** — relatório com análise de 7 fintechs brasileiras (Nubank, PicPay, PagBank, Mercado Pago, Stone, Creditas, Conta Azul)
+
+### Análise Fintechs — Aproveitamento para o μBank
+
+| Insight | Origem | Ação |
+|---------|--------|------|
+| **Monólito modular validado** | Todas as 7 fintechs | Nubank e Mercado Pago só migraram para microsserviços após escala comprovada. Nossa escolha de começar monolítico é o padrão de sucesso brasileiro. |
+| **Event Sourcing como backbone** | Nubank (Datomic/Clojure) | Já implementamos (`balance()` é fold de eventos). Reforçar como nosso "Datomic". |
+| **Boleto + Parcelamento (BNPL)** | Mercado Pago, PagBank | Duas operações bancárias essenciais que faltam no `TransactionKind`. Adicionar `Boleto` e `Installment`. |
+| **Cashback/Rewards para LEARNING** | PicPay, Stone (gamificação) | `TransactionKind::Cashback` para engajar Interessado 2 no modo LEARNING com missões e recompensas MUB. |
+| **API no modelo BaaS** | Conta Azul | REST API do `mu_api` deve ser desenhada para qualquer ERP conectar — chave de API, versionamento `/v1/`, documentação OpenAPI. |
+| **PCI-DSS como meta** | PagBank | Adicionar estudo dos 12 requisitos PCI-DSS no Trimestre 4 como meta de compliance de segurança. |
+
 ## 3. Decisões arquiteturais
 
 | Decisão | Justificativa |
@@ -112,22 +135,12 @@ crates/
 - `Currency::JPY` adicionado ao enum com símbolo `JP¥` (ISO 4217: 392)
 - **Observação:** glossário será traduzido para inglês futuramente (Interessado 1)
 
-### ✅ Concluído (2026-05-30)
-
-- **`TransactionKind::Reversal { original_tx }`** — novo variante do enum para estorno de transações
-- **`Ledger.reversal()`** — engine de estorno com validação: só permite estornar Deposit/Withdraw/Transfer, bloqueia dupla reversão, verifica conta/moeda/saldo, gera descrição automática
-- **37 testes unitários** — 17 novos testes para estorno (sucesso, falha por tipo inválido, dupla reversão, conta errada, moeda errada, saldo insuficiente)
-- **Refatoração de construtores** — `Account::new()`, `Customer::new()`, `Transaction::new()` auto-geram UUIDs; `with_id()` criado para restauração de persistência
-- **Temas JetBrains** — `muBank_jetbrains_theme.icls` (pure black μBank) e `muBank_nord_theme.icls` (μBank × Nord)
-- **Arquitetura visual** — prompts Mermaid renderizados em `docs/images/` (visão geral, ledger imutável, ledger × conta corrente)
-- **`Cargo.lock` e `.gitignore`** atualizados com `target/` e diretórios IDE
-- **Remote sincronizado** — `git push` realizado, working tree clean, 0 commits behind
-
 ### 🔜 Próximos passos (próximas semanas)
 
-- Operações bancárias essenciais adicionais (Débito Automático, Pagamento de Boletos)
+- Implementar `TransactionKind::Boleto` e `TransactionKind::Installment` (BNPL)
+- Implementar `TransactionKind::Cashback` para gamificação LEARNING
 - Persistência com SQLite/`sqlx`
-- API HTTP com Axum
+- API HTTP com Axum no modelo BaaS
 
 ## 8. Observações gerais
 
