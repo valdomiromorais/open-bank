@@ -3,7 +3,7 @@ use crate::money::Money;
 use chrono::{DateTime, NaiveDate, Utc};
 use uuid::Uuid;
 
-/// #[ptbr] Status do boleto — ciclo de vida do instrumento.
+/// #[ptbr] Status do bankslip — ciclo de vida do instrumento.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SlipStatus {
     Pending,
@@ -13,7 +13,7 @@ pub enum SlipStatus {
     Expired,
 }
 
-/// #[ptbr] Boleto bancário brasileiro — ordem de pagamento com código de barras.
+/// #[ptbr] Bankslip brasileiro — ordem de pagamento com código de barras.
 /// Representa o instrumento em si, não a transação financeira.
 #[derive(Debug, Clone)]
 pub struct BankSlip {

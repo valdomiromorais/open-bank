@@ -37,8 +37,8 @@ pub enum TransactionKind {
     Reversal {
         original_tx: TransactionId,
     },
-    /// #[ptbr] Pagamento de boleto (bankslip) bancário — código de barras.
-    BoletoPayment {
+    /// #[ptbr] Pagamento de bankslip — código de barras.
+    BankslipPayment {
         code: String,
     },
 }

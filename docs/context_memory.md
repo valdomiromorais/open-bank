@@ -139,11 +139,11 @@ crates/
 ### ✅ Concluído (2026-06-02)
 
 - **`BankSlip`** (`bankslip.rs`) — struct com lifecycle `Pending → Registered → Paid | Cancelled | Expired`, 5 testes unitários
-- **`TransactionKind::BoletoPayment { code }`** — nova variante no enum de transações
-- **`Ledger::issue_boleto()`** — emite boleto em `Pending` sem debitar saldo
-- **`Ledger::register_boleto()`** — transita `Pending → Registered` (registro na CIP)
-- **`Ledger::pay_boleto()`** — debita o valor da conta (requer `Registered`)
-- Decisão arquitetural: **boleto é separado em instrumento (`BankSlip`) + transação financeira (`BoletoPayment`)** — emissão não mexe no saldo, pagamento sim; `Pending` → `Registered` reflete o fluxo real CIP
+- **`TransactionKind::BankslipPayment { code }`** — nova variante no enum de transações
+- **`Ledger::issue_bankslip()`** — emite bankslip em `Pending` sem debitar saldo
+- **`Ledger::register_bankslip()`** — transita `Pending → Registered` (registro na CIP)
+- **`Ledger::pay_bankslip()`** — debita o valor da conta (requer `Registered`)
+- Decisão arquitetural: **bankslip é separado em instrumento (`BankSlip`) + transação financeira (`BankslipPayment`)** — emissão não mexe no saldo, pagamento sim; `Pending` → `Registered` reflete o fluxo real CIP
 - **44 testes passando** (sem alteração numérica — 1 removido, 2 adicionados)
 
 ### 🔜 Próximos passos

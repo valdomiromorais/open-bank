@@ -31,8 +31,8 @@ pub enum LedgerError {
     TransferToSameAccount,
     TransactionNotFound(TransactionId),
     OriginalAlreadyReversed(TransactionId),
-    BoletoNotFound(uuid::Uuid),
-    BoletoAlreadyPaid(uuid::Uuid),
+    BankslipNotFound(uuid::Uuid),
+    BankslipAlreadyPaid(uuid::Uuid),
 }
 
 impl std::fmt::Display for LedgerError {
@@ -71,9 +71,9 @@ impl std::fmt::Display for LedgerError {
             LedgerError::OriginalAlreadyReversed(id) => {
                 write!(f, "transaction {} has already been reversed", id)
             }
-            LedgerError::BoletoNotFound(id) => write!(f, "boleto {} not found", id),
-            LedgerError::BoletoAlreadyPaid(id) => {
-                write!(f, "boleto {} is not in the required status for this operation", id)
+            LedgerError::BankslipNotFound(id) => write!(f, "bankslip {} not found", id),
+            LedgerError::BankslipAlreadyPaid(id) => {
+                write!(f, "bankslip {} is not in the required status for this operation", id)
             }
         }
     }
@@ -86,7 +86,7 @@ pub struct Ledger {
     customers: HashMap<CustomerId, Customer>,
     accounts: HashMap<AccountId, Account>,
     transactions: Vec<Transaction>,
-    boletos: Vec<BankSlip>,
+    bankslips: Vec<BankSlip>,
 }
 
 impl Ledger {
@@ -95,7 +95,7 @@ impl Ledger {
             customers: HashMap::new(),
             accounts: HashMap::new(),
             transactions: Vec::new(),
-            boletos: Vec::new(),
+            bankslips: Vec::new(),
         }
     }
 
@@ -188,7 +188,7 @@ impl Ledger {
                                     balance = (balance - tx.amount())
                                         .map_err(LedgerError::MoneyError)?;
                                 }
-                                TransactionKind::Withdraw | TransactionKind::BoletoPayment { .. } => {
+                                TransactionKind::Withdraw | TransactionKind::BankslipPayment { .. } => {
                                     balance = (balance + tx.amount())
                                         .map_err(LedgerError::MoneyError)?;
                                 }
@@ -207,7 +207,7 @@ impl Ledger {
                         }
                     }
                 }
-                TransactionKind::BoletoPayment { .. } => {
+                TransactionKind::BankslipPayment { .. } => {
                     if tx.account_id() == account_id {
                         balance = (balance - tx.amount()).map_err(LedgerError::MoneyError)?;
                     }
@@ -323,9 +323,9 @@ impl Ledger {
 
     // --- Boleto operations ---
 
-    /// #[ptbr] Emite um boleto bancário. O valor NÃO é debitado da conta ainda —
+    /// #[ptbr] Emite um bankslip. O valor NÃO é debitado da conta ainda —
     /// apenas registra o instrumento. O débito ocorre no pagamento.
-    pub fn issue_boleto(
+    pub fn issue_bankslip(
         &mut self,
         account_id: AccountId,
         amount: Money,
@@ -336,42 +336,42 @@ impl Ledger {
 
         let slip = BankSlip::new(account_id, amount, code, due_date);
         let id = slip.id();
-        self.boletos.push(slip);
+        self.bankslips.push(slip);
         Ok(id)
     }
 
-    /// #[ptbr] Registra um boleto pendente na CIP. Transita de Pending → Registered.
-    pub fn register_boleto(
+    /// #[ptbr] Registra um bankslip pendente na CIP. Transita de Pending → Registered.
+    pub fn register_bankslip(
         &mut self,
         slip_id: uuid::Uuid,
     ) -> Result<(), LedgerError> {
-        let found = self.boletos.iter().position(|s| s.id() == slip_id);
-        let idx = found.ok_or(LedgerError::BoletoNotFound(slip_id))?;
+        let found = self.bankslips.iter().position(|s| s.id() == slip_id);
+        let idx = found.ok_or(LedgerError::BankslipNotFound(slip_id))?;
 
-        if self.boletos[idx].status() != SlipStatus::Pending {
-            return Err(LedgerError::BoletoAlreadyPaid(slip_id));
+        if self.bankslips[idx].status() != SlipStatus::Pending {
+            return Err(LedgerError::BankslipAlreadyPaid(slip_id));
         }
 
-        self.boletos[idx].register();
+        self.bankslips[idx].register();
         Ok(())
     }
 
-    /// #[ptbr] Paga um boleto emitido: debita o valor da conta e marca como pago.
-    pub fn pay_boleto(
+    /// #[ptbr] Paga um bankslip: debita o valor da conta e marca como pago.
+    pub fn pay_bankslip(
         &mut self,
         slip_id: uuid::Uuid,
         description: String,
     ) -> Result<TransactionId, LedgerError> {
-        let found = self.boletos.iter().position(|s| s.id() == slip_id);
-        let idx = found.ok_or(LedgerError::BoletoNotFound(slip_id))?;
+        let found = self.bankslips.iter().position(|s| s.id() == slip_id);
+        let idx = found.ok_or(LedgerError::BankslipNotFound(slip_id))?;
 
-        if self.boletos[idx].status() != SlipStatus::Registered {
-            return Err(LedgerError::BoletoAlreadyPaid(slip_id));
+        if self.bankslips[idx].status() != SlipStatus::Registered {
+            return Err(LedgerError::BankslipAlreadyPaid(slip_id));
         }
 
-        let account_id = self.boletos[idx].account_id();
-        let amount = self.boletos[idx].amount();
-        let code = self.boletos[idx].code().to_string();
+        let account_id = self.bankslips[idx].account_id();
+        let amount = self.bankslips[idx].amount();
+        let code = self.bankslips[idx].code().to_string();
 
         self.ensure_can_transact(account_id, &amount)?;
 
@@ -385,11 +385,11 @@ impl Ledger {
             });
         }
 
-        self.boletos[idx].pay();
+        self.bankslips[idx].pay();
 
         let tx = Transaction::new(
             account_id,
-            TransactionKind::BoletoPayment { code },
+            TransactionKind::BankslipPayment { code },
             amount,
             description,
         );
@@ -398,8 +398,8 @@ impl Ledger {
         Ok(id)
     }
 
-    pub fn all_boletos(&self) -> &[BankSlip] {
-        &self.boletos
+    pub fn all_bankslips(&self) -> &[BankSlip] {
+        &self.bankslips
     }
 
     pub fn all_transactions(&self) -> &[Transaction] {
@@ -610,39 +610,39 @@ mod tests {
     }
 
     #[test]
-    fn test_issue_and_pay_boleto() {
+    fn test_issue_and_pay_bankslip() {
         let (mut ledger, _customer, account) = setup();
         ledger.deposit(account, mub(dec!(500)), "dep".into()).unwrap();
 
         let slip_id = ledger
-            .issue_boleto(account, mub(dec!(150)), "00190.00009 01234.567890 12345.678901 1 12345678901234".into(), NaiveDate::from_ymd_opt(2026, 6, 15).unwrap())
+            .issue_bankslip(account, mub(dec!(150)), "00190.00009 01234.567890 12345.678901 1 12345678901234".into(), NaiveDate::from_ymd_opt(2026, 6, 15).unwrap())
             .unwrap();
 
-        assert_eq!(ledger.all_boletos().len(), 1);
-        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Pending);
+        assert_eq!(ledger.all_bankslips().len(), 1);
+        assert_eq!(ledger.all_bankslips()[0].status(), SlipStatus::Pending);
 
-        ledger.register_boleto(slip_id).unwrap();
-        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Registered);
+        ledger.register_bankslip(slip_id).unwrap();
+        assert_eq!(ledger.all_bankslips()[0].status(), SlipStatus::Registered);
 
-        let tx_id = ledger.pay_boleto(slip_id, "Pagamento boleto".into()).unwrap();
+        let tx_id = ledger.pay_bankslip(slip_id, "Pagamento bankslip".into()).unwrap();
 
         assert_eq!(ledger.balance(account).unwrap(), mub(dec!(350)));
-        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Paid);
+        assert_eq!(ledger.all_bankslips()[0].status(), SlipStatus::Paid);
 
         let tx = ledger.all_transactions().iter().find(|t| t.id() == tx_id).unwrap();
-        assert!(matches!(tx.kind(), TransactionKind::BoletoPayment { .. }));
+        assert!(matches!(tx.kind(), TransactionKind::BankslipPayment { .. }));
     }
 
     #[test]
-    fn test_pay_boleto_insufficient_balance() {
+    fn test_pay_bankslip_insufficient_balance() {
         let (mut ledger, _customer, account) = setup();
         let slip_id = ledger
-            .issue_boleto(account, mub(dec!(999)), "code".into(), NaiveDate::from_ymd_opt(2026, 7, 1).unwrap())
+            .issue_bankslip(account, mub(dec!(999)), "code".into(), NaiveDate::from_ymd_opt(2026, 7, 1).unwrap())
             .unwrap();
 
-        ledger.register_boleto(slip_id).unwrap();
+        ledger.register_bankslip(slip_id).unwrap();
 
-        let result = ledger.pay_boleto(slip_id, "sem saldo".into());
+        let result = ledger.pay_bankslip(slip_id, "sem saldo".into());
         assert!(matches!(result, Err(LedgerError::InsufficientBalance { .. })));
     }
 
