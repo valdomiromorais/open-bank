@@ -37,6 +37,10 @@ pub enum TransactionKind {
     Reversal {
         original_tx: TransactionId,
     },
+    /// #[ptbr] Pagamento de boleto bancário — código de barras.
+    BoletoPayment {
+        code: String,
+    },
 }
 
 /// A single financial transaction recorded in the ledger.

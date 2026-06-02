@@ -3,10 +3,12 @@
 // Cada validação aqui é uma raposinha caçada.
 
 use crate::account::{Account, AccountId, AccountStatus};
+use crate::bankslip::{BankSlip, SlipStatus};
 use crate::currency::Currency;
 use crate::customer::{Customer, CustomerId};
 use crate::money::{Money, MoneyError};
 use crate::transaction::{Transaction, TransactionId, TransactionKind};
+use chrono::NaiveDate;
 use std::collections::HashMap;
 
 /// Errors that can occur during ledger operations.
@@ -29,6 +31,8 @@ pub enum LedgerError {
     TransferToSameAccount,
     TransactionNotFound(TransactionId),
     OriginalAlreadyReversed(TransactionId),
+    BoletoNotFound(uuid::Uuid),
+    BoletoAlreadyPaid(uuid::Uuid),
 }
 
 impl std::fmt::Display for LedgerError {
@@ -67,6 +71,10 @@ impl std::fmt::Display for LedgerError {
             LedgerError::OriginalAlreadyReversed(id) => {
                 write!(f, "transaction {} has already been reversed", id)
             }
+            LedgerError::BoletoNotFound(id) => write!(f, "boleto {} not found", id),
+            LedgerError::BoletoAlreadyPaid(id) => {
+                write!(f, "boleto {} has already been paid or cancelled", id)
+            }
         }
     }
 }
@@ -78,6 +86,7 @@ pub struct Ledger {
     customers: HashMap<CustomerId, Customer>,
     accounts: HashMap<AccountId, Account>,
     transactions: Vec<Transaction>,
+    boletos: Vec<BankSlip>,
 }
 
 impl Ledger {
@@ -86,6 +95,7 @@ impl Ledger {
             customers: HashMap::new(),
             accounts: HashMap::new(),
             transactions: Vec::new(),
+            boletos: Vec::new(),
         }
     }
 
@@ -178,7 +188,7 @@ impl Ledger {
                                     balance = (balance - tx.amount())
                                         .map_err(LedgerError::MoneyError)?;
                                 }
-                                TransactionKind::Withdraw => {
+                                TransactionKind::Withdraw | TransactionKind::BoletoPayment { .. } => {
                                     balance = (balance + tx.amount())
                                         .map_err(LedgerError::MoneyError)?;
                                 }
@@ -195,6 +205,11 @@ impl Ledger {
                                 TransactionKind::Reversal { .. } => {}
                             }
                         }
+                    }
+                }
+                TransactionKind::BoletoPayment { .. } => {
+                    if tx.account_id() == account_id {
+                        balance = (balance - tx.amount()).map_err(LedgerError::MoneyError)?;
                     }
                 }
             }
@@ -304,6 +319,71 @@ impl Ledger {
         let id = tx.id();
         self.transactions.push(tx);
         Ok(id)
+    }
+
+    // --- Boleto operations ---
+
+    /// #[ptbr] Emite um boleto bancário. O valor NÃO é debitado da conta ainda —
+    /// apenas registra o instrumento. O débito ocorre no pagamento.
+    pub fn issue_boleto(
+        &mut self,
+        account_id: AccountId,
+        amount: Money,
+        code: String,
+        due_date: NaiveDate,
+    ) -> Result<uuid::Uuid, LedgerError> {
+        self.ensure_can_transact(account_id, &amount)?;
+
+        let slip = BankSlip::new(account_id, amount, code, due_date);
+        let id = slip.id();
+        self.boletos.push(slip);
+        Ok(id)
+    }
+
+    /// #[ptbr] Paga um boleto emitido: debita o valor da conta e marca como pago.
+    pub fn pay_boleto(
+        &mut self,
+        slip_id: uuid::Uuid,
+        description: String,
+    ) -> Result<TransactionId, LedgerError> {
+        let found = self.boletos.iter().position(|s| s.id() == slip_id);
+        let idx = found.ok_or(LedgerError::BoletoNotFound(slip_id))?;
+
+        if self.boletos[idx].status() != SlipStatus::Issued {
+            return Err(LedgerError::BoletoAlreadyPaid(slip_id));
+        }
+
+        let account_id = self.boletos[idx].account_id();
+        let amount = self.boletos[idx].amount();
+        let code = self.boletos[idx].code().to_string();
+
+        self.ensure_can_transact(account_id, &amount)?;
+
+        let balance = self.balance(account_id)?;
+        let available = (balance - amount).map_err(LedgerError::MoneyError)?;
+        if available.amount().is_sign_negative() {
+            return Err(LedgerError::InsufficientBalance {
+                account: account_id,
+                balance,
+                requested: amount,
+            });
+        }
+
+        self.boletos[idx].pay();
+
+        let tx = Transaction::new(
+            account_id,
+            TransactionKind::BoletoPayment { code },
+            amount,
+            description,
+        );
+        let id = tx.id();
+        self.transactions.push(tx);
+        Ok(id)
+    }
+
+    pub fn all_boletos(&self) -> &[BankSlip] {
+        &self.boletos
     }
 
     pub fn all_transactions(&self) -> &[Transaction] {
@@ -511,6 +591,38 @@ mod tests {
         let phantom = TransactionId::new();
         let result = ledger.reversal(phantom, "ghost".into());
         assert_eq!(result, Err(LedgerError::TransactionNotFound(phantom)));
+    }
+
+    #[test]
+    fn test_issue_and_pay_boleto() {
+        let (mut ledger, _customer, account) = setup();
+        ledger.deposit(account, mub(dec!(500)), "dep".into()).unwrap();
+
+        let slip_id = ledger
+            .issue_boleto(account, mub(dec!(150)), "00190.00009 01234.567890 12345.678901 1 12345678901234".into(), NaiveDate::from_ymd_opt(2026, 6, 15).unwrap())
+            .unwrap();
+
+        assert_eq!(ledger.all_boletos().len(), 1);
+        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Issued);
+
+        let tx_id = ledger.pay_boleto(slip_id, "Pagamento boleto".into()).unwrap();
+
+        assert_eq!(ledger.balance(account).unwrap(), mub(dec!(350)));
+        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Paid);
+
+        let tx = ledger.all_transactions().iter().find(|t| t.id() == tx_id).unwrap();
+        assert!(matches!(tx.kind(), TransactionKind::BoletoPayment { .. }));
+    }
+
+    #[test]
+    fn test_pay_boleto_insufficient_balance() {
+        let (mut ledger, _customer, account) = setup();
+        let slip_id = ledger
+            .issue_boleto(account, mub(dec!(999)), "code".into(), NaiveDate::from_ymd_opt(2026, 7, 1).unwrap())
+            .unwrap();
+
+        let result = ledger.pay_boleto(slip_id, "sem saldo".into());
+        assert!(matches!(result, Err(LedgerError::InsufficientBalance { .. })));
     }
 
     #[test]
