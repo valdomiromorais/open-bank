@@ -136,10 +136,19 @@ crates/
 - `Currency::JPY` adicionado ao enum com símbolo `JP¥` (ISO 4217: 392)
 - **Observação:** glossário será traduzido para inglês futuramente (Interessado 1)
 
-### 🔜 Próximos passos (próximas semanas)
+### ✅ Concluído (2026-06-02)
 
-- Implementar `TransactionKind::Boleto` e `TransactionKind::Installment` (BNPL)
-- Implementar `TransactionKind::Cashback` para gamificação LEARNING
+- **`BankSlip`** (`bankslip.rs`) — struct com lifecycle `Issued → Paid | Cancelled | Expired`, 4 testes unitários
+- **`TransactionKind::BoletoPayment { code }`** — nova variante no enum de transações
+- **`Ledger::issue_boleto()`** — emite boleto sem debitar saldo (apenas registro do instrumento)
+- **`Ledger::pay_boleto()`** — debita o valor da conta e marca o boleto como pago
+- Decisão arquitetural: **boleto é separado em instrumento (`BankSlip`) + transação financeira (`BoletoPayment`)** — emissão não mexe no saldo, pagamento sim
+- **44 testes passando** (era 38)
+
+### 🔜 Próximos passos
+
+- `TransactionKind::Installment` (parcelamento/BNPL)
+- `TransactionKind::Cashback` para gamificação LEARNING
 - Persistência com SQLite/`sqlx`
 - API HTTP com Axum no modelo BaaS
 
