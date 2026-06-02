@@ -138,12 +138,13 @@ crates/
 
 ### ✅ Concluído (2026-06-02)
 
-- **`BankSlip`** (`bankslip.rs`) — struct com lifecycle `Issued → Paid | Cancelled | Expired`, 4 testes unitários
+- **`BankSlip`** (`bankslip.rs`) — struct com lifecycle `Pending → Registered → Paid | Cancelled | Expired`, 5 testes unitários
 - **`TransactionKind::BoletoPayment { code }`** — nova variante no enum de transações
-- **`Ledger::issue_boleto()`** — emite boleto sem debitar saldo (apenas registro do instrumento)
-- **`Ledger::pay_boleto()`** — debita o valor da conta e marca o boleto como pago
-- Decisão arquitetural: **boleto é separado em instrumento (`BankSlip`) + transação financeira (`BoletoPayment`)** — emissão não mexe no saldo, pagamento sim
-- **44 testes passando** (era 38)
+- **`Ledger::issue_boleto()`** — emite boleto em `Pending` sem debitar saldo
+- **`Ledger::register_boleto()`** — transita `Pending → Registered` (registro na CIP)
+- **`Ledger::pay_boleto()`** — debita o valor da conta (requer `Registered`)
+- Decisão arquitetural: **boleto é separado em instrumento (`BankSlip`) + transação financeira (`BoletoPayment`)** — emissão não mexe no saldo, pagamento sim; `Pending` → `Registered` reflete o fluxo real CIP
+- **44 testes passando** (sem alteração numérica — 1 removido, 2 adicionados)
 
 ### 🔜 Próximos passos
 
@@ -158,6 +159,7 @@ crates/
 - O remote é `origin → https://github.com/valdomiromorais/open-bank.git`
 - Commits são em inglês, descritivos, com escopo do crate afetado (`feat(mu_core): ...`, `docs: ...`, `chore: ...`)
 - Fluxo de trabalho: GitHub Flow simplificado — branches curtas `feat/`, PRs com template próprio em `.github/PULL_REQUEST_TEMPLATE.md`
+- **Checklist no roadmap:** `[ ]` = em aberto, `[x]` = concluído, `[s]` = suspenso (com motivo da suspensão na sequência)
 
 ## 9. Arquivos vivos — atualização contínua
 

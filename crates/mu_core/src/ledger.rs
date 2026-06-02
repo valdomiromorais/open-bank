@@ -73,7 +73,7 @@ impl std::fmt::Display for LedgerError {
             }
             LedgerError::BoletoNotFound(id) => write!(f, "boleto {} not found", id),
             LedgerError::BoletoAlreadyPaid(id) => {
-                write!(f, "boleto {} has already been paid or cancelled", id)
+                write!(f, "boleto {} is not in the required status for this operation", id)
             }
         }
     }
@@ -340,6 +340,22 @@ impl Ledger {
         Ok(id)
     }
 
+    /// #[ptbr] Registra um boleto pendente na CIP. Transita de Pending → Registered.
+    pub fn register_boleto(
+        &mut self,
+        slip_id: uuid::Uuid,
+    ) -> Result<(), LedgerError> {
+        let found = self.boletos.iter().position(|s| s.id() == slip_id);
+        let idx = found.ok_or(LedgerError::BoletoNotFound(slip_id))?;
+
+        if self.boletos[idx].status() != SlipStatus::Pending {
+            return Err(LedgerError::BoletoAlreadyPaid(slip_id));
+        }
+
+        self.boletos[idx].register();
+        Ok(())
+    }
+
     /// #[ptbr] Paga um boleto emitido: debita o valor da conta e marca como pago.
     pub fn pay_boleto(
         &mut self,
@@ -349,7 +365,7 @@ impl Ledger {
         let found = self.boletos.iter().position(|s| s.id() == slip_id);
         let idx = found.ok_or(LedgerError::BoletoNotFound(slip_id))?;
 
-        if self.boletos[idx].status() != SlipStatus::Issued {
+        if self.boletos[idx].status() != SlipStatus::Registered {
             return Err(LedgerError::BoletoAlreadyPaid(slip_id));
         }
 
@@ -603,7 +619,10 @@ mod tests {
             .unwrap();
 
         assert_eq!(ledger.all_boletos().len(), 1);
-        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Issued);
+        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Pending);
+
+        ledger.register_boleto(slip_id).unwrap();
+        assert_eq!(ledger.all_boletos()[0].status(), SlipStatus::Registered);
 
         let tx_id = ledger.pay_boleto(slip_id, "Pagamento boleto".into()).unwrap();
 
@@ -620,6 +639,8 @@ mod tests {
         let slip_id = ledger
             .issue_boleto(account, mub(dec!(999)), "code".into(), NaiveDate::from_ymd_opt(2026, 7, 1).unwrap())
             .unwrap();
+
+        ledger.register_boleto(slip_id).unwrap();
 
         let result = ledger.pay_boleto(slip_id, "sem saldo".into());
         assert!(matches!(result, Err(LedgerError::InsufficientBalance { .. })));

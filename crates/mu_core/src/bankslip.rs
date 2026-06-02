@@ -6,7 +6,8 @@ use uuid::Uuid;
 /// #[ptbr] Status do boleto — ciclo de vida do instrumento.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SlipStatus {
-    Issued,
+    Pending,
+    Registered,
     Paid,
     Cancelled,
     Expired,
@@ -33,7 +34,7 @@ impl BankSlip {
             account_id,
             amount,
             code,
-            status: SlipStatus::Issued,
+            status: SlipStatus::Pending,
             due_date,
             issued_at: Utc::now(),
             paid_at: None,
@@ -72,6 +73,10 @@ impl BankSlip {
         self.paid_at
     }
 
+    pub fn register(&mut self) {
+        self.status = SlipStatus::Registered;
+    }
+
     pub fn pay(&mut self) {
         self.status = SlipStatus::Paid;
         self.paid_at = Some(Utc::now());
@@ -105,7 +110,7 @@ mod tests {
     #[test]
     fn test_bankslip_new() {
         let slip = sample_slip();
-        assert_eq!(slip.status(), SlipStatus::Issued);
+        assert_eq!(slip.status(), SlipStatus::Pending);
         assert_eq!(slip.amount(), Money::new(dec!(150.00), Currency::BRL));
         assert!(slip.paid_at().is_none());
     }
@@ -113,7 +118,10 @@ mod tests {
     #[test]
     fn test_bankslip_lifecycle() {
         let mut slip = sample_slip();
-        assert_eq!(slip.status(), SlipStatus::Issued);
+        assert_eq!(slip.status(), SlipStatus::Pending);
+
+        slip.register();
+        assert_eq!(slip.status(), SlipStatus::Registered);
 
         slip.pay();
         assert_eq!(slip.status(), SlipStatus::Paid);
@@ -121,8 +129,10 @@ mod tests {
     }
 
     #[test]
-    fn test_bankslip_cancel() {
+    fn test_bankslip_register_then_cancel() {
         let mut slip = sample_slip();
+        slip.register();
+        assert_eq!(slip.status(), SlipStatus::Registered);
         slip.cancel();
         assert_eq!(slip.status(), SlipStatus::Cancelled);
     }
