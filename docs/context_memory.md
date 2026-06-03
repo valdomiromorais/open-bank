@@ -1,6 +1,6 @@
 # Context Memory — Mu-Bank (μBank)
 
-> Última atualização: 2026-05-30
+> Última atualização: 2026-06-02
 
 ---
 
@@ -14,13 +14,13 @@
 - **Prazo:** 24 meses (8 trimestres), vide `docs/roadmap.md`
 - **Prompt original:** `docs/initial_prompt.md`
 
-## 2. Estado atual (commit `8aec2a3`)
+## 2. Estado atual (commit `89220c3`)
 
 ### Workspace Rust (`Cargo.toml` raiz como `[workspace]`)
 
 ```
 crates/
-├── mu_core/        # ✅ ATIVO — Currency, Money, Account, Customer, Transaction, Ledger
+├── mu_core/        # ✅ ATIVO — Currency, Money, Account, Customer, Transaction, Ledger, BankSlip
 ├── mu_cli/         # ✅ DEMO FUNCIONAL — cria clientes, contas, deposita, saca, transfere
 ├── mu_api/         # 🟡 stub
 ├── mu_db/          # 🟡 stub
@@ -44,13 +44,15 @@ crates/
   - Display com casas decimais fixas conforme `Currency::decimals()`
 - **`Customer`** (`customer.rs`): `CustomerId(Uuid)`, `Customer { id, name }`
 - **`Account`** (`account.rs`): `AccountId(Uuid)`, `AccountStatus { Active, Frozen, Closed, PendingVerification }`, `Account { id, holder, status, currency }`
-- **`Transaction`** (`transaction.rs`): `TransactionId(Uuid)`, `TransactionKind { Deposit, Withdraw, Transfer, Reversal { original_tx } }`, `Transaction { id, account_id, kind, amount, timestamp, description }`
+- **`Transaction`** (`transaction.rs`): `TransactionId(Uuid)`, `TransactionKind { Deposit, Withdraw, Transfer, Reversal { original_tx }, BankslipPayment { code } }`, `Transaction { id, account_id, kind, amount, timestamp, description }`
+- **`BankSlip`** (`bankslip.rs`): `SlipId(Uuid)`, `SlipStatus { Pending, Registered, Paid, Cancelled, Expired }`, `BankSlip { id, account_id, amount, code, due_date, status, created_at }` — instrumento separado da transação financeira
 - **`Ledger`** (`ledger.rs`): engine central in-memory com:
   - Customer CRUD, Account CRUD com activation
   - `balance()` computado por fold no histórico (Event Sourcing)
   - `deposit()`, `withdraw()`, `transfer()`, `reversal()` com validações
-  - Proteções: conta inativa, moeda errada, saldo insuficiente, auto-transferência, reversão dupla bloqueada
-- **37 testes unitários passando** (20 originais + 17 novos estorno)
+  - `issue_bankslip()`, `register_bankslip()`, `pay_bankslip()`, `all_bankslips()`
+  - Proteções: conta inativa, moeda errada, saldo insuficiente, auto-transferência, reversão dupla bloqueada, ciclo de vida do bankslip
+- **44 testes unitários passando**
 
 ### Docs — alinhamento de identidade (2026-05-26)
 
@@ -70,6 +72,9 @@ crates/
 - **`Cargo.lock` e `.gitignore`** atualizados com `target/` e diretórios IDE
 - **Remote sincronizado** — `git push` realizado, working tree clean, 0 commits behind
 - **`docs/FINTECHS.md`** — relatório com análise de 7 fintechs brasileiras (Nubank, PicPay, PagBank, Mercado Pago, Stone, Creditas, Conta Azul)
+- **`docs/images/entity_relationship_prompt.md`** — prompt para gerar diagrama de relacionamentos das entidades
+- **`docs/analise_fintechs.md`** — análise complementar com insights de segurança, Zero Trust, e oportunidade educacional
+- **Cantares 2:15** — versículo adotado como lema de vigilância no README, MANIFEST e ledger.rs
 
 ### Análise Fintechs — Aproveitamento para o μBank
 
@@ -77,7 +82,7 @@ crates/
 |---------|--------|------|
 | **Monólito modular validado** | Todas as 7 fintechs | Nubank e Mercado Pago só migraram para microsserviços após escala comprovada. Nossa escolha de começar monolítico é o padrão de sucesso brasileiro. |
 | **Event Sourcing como backbone** | Nubank (Datomic/Clojure) | Já implementamos (`balance()` é fold de eventos). Reforçar como nosso "Datomic". |
-| **Boleto + Parcelamento (BNPL)** | Mercado Pago, PagBank | Duas operações bancárias essenciais que faltam no `TransactionKind`. Adicionar `Boleto` e `Installment`. |
+| **BankslipPayment implementado** | Mercado Pago, PagBank | `BankSlip` + `BoletoPayment` concluído. Ciclo de vida `Pending → Registered → Paid/Cancelled/Expired`. Faltam `Installment` e `Cashback`. |
 | **Cashback/Rewards para LEARNING** | PicPay, Stone (gamificação) | `TransactionKind::Cashback` para engajar Interessado 2 no modo LEARNING com missões e recompensas MUB. |
 | **API no modelo BaaS** | Conta Azul | REST API do `mu_api` deve ser desenhada para qualquer ERP conectar — chave de API, versionamento `/v1/`, documentação OpenAPI. |
 | **PCI-DSS como meta** | PagBank | Adicionar estudo dos 12 requisitos PCI-DSS no Trimestre 4 como meta de compliance de segurança. |
@@ -172,5 +177,7 @@ A cada conclusão de tópico, os seguintes arquivos devem ser atualizados para r
 | `README.md` | Visão geral, status dos crates, instruções de uso |
 | `docs/journal/MANIFEST.md` | Manifesto do desenvolvedor — frase dopaminérgica diária e marcos |
 | `docs/journal/etica_pessoal.md` | Princípios éticos pessoais do desenvolvedor — sistema operacional emocional |
+| `docs/journal/learning_notes.md` | Anotações de aprendizado — descobertas, ahá! momentos e reflexões |
+| `docs/images/entity_relationship_prompt.md` | Prompt para gerar diagrama de relacionamentos das entidades |
 
 Isso garante que a documentação nunca fique dessincronizada do código e que o Interessado 1 (e qualquer IA auxiliar) sempre tenha contexto fiel ao projeto real.
