@@ -5,7 +5,7 @@
 
 
 
-## Rust Notes
+## Rust and Computing Notes
 
 ### Arrays ("[ ]") e string
 1. em Rust índexam a partir de 0
@@ -67,6 +67,33 @@ dado não pode mudar**.
 
 **Shadowing** (let): Você está criando uma nova variável. Isso permite alterar o valor, alterar o tipo, e até mesmo
 transformá-la de volta em imutável após reatribuí-la.
+
+
+### ANSI escape code
+
+**ANSI escape codes** são usados para colorir texto no terminal:
+
+| Código     | Significado                                 |
+|------------|---------------------------------------------|
+| `\x1b[32m` | Liga cor verde (foreground)                 |
+| `\x1b[0m`  | Reseta todos os atributos (volta ao normal) |
+| `\x1b[31m` | Vermelho                                    |
+| `\x1b[33m` | Amarelo                                     |
+| `\x1b[1m`  | Negrito                                     |
+
+Então, `"\x1b[32m✓\x1b[0m"` em `println!("\x1b[32m✓\x1b[0m Customer created: Alice");` imprime um **✓ verde** e volta
+ao normal depois. É o "jeito cru" de fazer cor no terminal — sem crate externo, só sequências de escape ASCII.
+O `\x1b` é o caractere ESC (27 em decimal, `0x1B` em hex), que sinaliza "isso aqui é um comando, não texto para imprimir".
+
+O formato completo é:
+
+`ESC [ parâmetros m`
+
+1. **[** — character [ (literal), abre a sequência CSI (Control Sequence Introducer)
+2. **parâmetros** — números separados por ';' ex: 32 = verde, 1;32 = negrito + verde
+3. **m** — letra que identifica o tipo do comando: m = SGR (Select Graphic Rendition), ou seja, "**_aplicar estilo/cores_**".
+
+Então `ESC[32m` = "_a partir daqui, texto verde_". `ESC[0m` = "_volta tudo ao normal_".
 
 ---
 

@@ -10,7 +10,7 @@ fn main() {
     let mut ledger = Ledger::new();
 
     let alice = ledger.create_customer("Alice".into());
-    println!("\x1b[32m✓\x1b[0m Customer created: Alice");
+    println!("\x1b[32m✓\x1b[0m Customer created: Alice"); // #[ptbr] Contém ANSI escape code. Ver learning notes
 
     let acc = ledger
         .create_account(alice, Currency::MUB)

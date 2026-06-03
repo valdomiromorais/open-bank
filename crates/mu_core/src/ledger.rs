@@ -86,7 +86,7 @@ pub struct Ledger {
     customers   : HashMap<CustomerId, Customer>,
     accounts    : HashMap<AccountId, Account>,
     transactions: Vec<Transaction>,
-    bankslips: Vec<BankSlip>,
+    bankslips   : Vec<BankSlip>,
 }
 
 impl Ledger {

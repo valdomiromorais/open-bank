@@ -1,5 +1,5 @@
 //! #[ptbr] Módulo host para a _**mu_core lib**_
-//! 
+//
 pub mod account;
 pub mod bankslip;
 pub mod currency;
