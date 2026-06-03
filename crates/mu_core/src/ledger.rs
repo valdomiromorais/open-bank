@@ -35,6 +35,8 @@ pub enum LedgerError {
     BankslipAlreadyPaid(uuid::Uuid),
 }
 
+pub type LedgerResult<T> = Result<T, LedgerError>;
+
 impl std::fmt::Display for LedgerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -83,19 +85,19 @@ impl std::fmt::Display for LedgerError {
 /// #[ptbr] Saldo nunca é armazenado; é computado agregando transações (Event Sourcing).
 #[derive(Debug, Clone)]
 pub struct Ledger {
-    customers   : HashMap<CustomerId, Customer>,
-    accounts    : HashMap<AccountId, Account>,
-    transactions: Vec<Transaction>,
-    bankslips   : Vec<BankSlip>,
+    customers    : HashMap<CustomerId, Customer>,
+    accounts     : HashMap<AccountId, Account>,
+    transactions : Vec<Transaction>,
+    bankslips    : Vec<BankSlip>,
 }
 
 impl Ledger {
     pub fn new() -> Self {
         Ledger {
-            customers: HashMap::new(),
-            accounts: HashMap::new(),
-            transactions: Vec::new(),
-            bankslips: Vec::new(),
+            customers    : HashMap::new(),
+            accounts     : HashMap::new(),
+            transactions : Vec::new(),
+            bankslips    : Vec::new(),
         }
     }
 
@@ -108,6 +110,7 @@ impl Ledger {
         id
     }
 
+    //#[ptbr] retorna algo (Some), nesse caso um Customer, ou nada (None)
     pub fn get_customer(&self, id: CustomerId) -> Option<&Customer> {
         self.customers.get(&id)
     }
@@ -118,7 +121,7 @@ impl Ledger {
         &mut self,
         holder: CustomerId,
         currency: Currency,
-    ) -> Result<AccountId, LedgerError> {
+    ) -> LedgerResult<AccountId> {
         if !self.customers.contains_key(&holder) {
             return Err(LedgerError::CustomerNotFound(holder));
         }
@@ -132,7 +135,7 @@ impl Ledger {
         self.accounts.get(&id)
     }
 
-    pub fn activate_account(&mut self, id: AccountId) -> Result<(), LedgerError> {
+    pub fn activate_account(&mut self, id: AccountId) -> LedgerResult<()> {
         let account = self
             .accounts
             .get_mut(&id)
@@ -145,7 +148,7 @@ impl Ledger {
 
     /// Computes the current balance of an account by folding over all transactions.
     /// #[ptbr] Coração do Event Sourcing: saldo é função pura do histórico.
-    pub fn balance(&self, account_id: AccountId) -> Result<Money, LedgerError> {
+    pub fn balance(&self, account_id: AccountId) -> LedgerResult<Money> {
         let account = self
             .accounts
             .get(&account_id)
@@ -225,7 +228,7 @@ impl Ledger {
         account_id: AccountId,
         amount: Money,
         description: String,
-    ) -> Result<TransactionId, LedgerError> {
+    ) -> LedgerResult<TransactionId> {
         self.ensure_can_transact(account_id, &amount)?;
 
         let tx = Transaction::new(account_id, TransactionKind::Deposit, amount, description);
@@ -239,7 +242,7 @@ impl Ledger {
         account_id: AccountId,
         amount: Money,
         description: String,
-    ) -> Result<TransactionId, LedgerError> {
+    ) -> LedgerResult<TransactionId> {
         self.ensure_can_transact(account_id, &amount)?;
 
         let balance = self.balance(account_id)?;
@@ -264,7 +267,7 @@ impl Ledger {
         to: AccountId,
         amount: Money,
         description: String,
-    ) -> Result<TransactionId, LedgerError> {
+    ) -> LedgerResult<TransactionId> {
         if from == to {
             return Err(LedgerError::TransferToSameAccount);
         }
@@ -294,7 +297,7 @@ impl Ledger {
         &mut self,
         original_tx: TransactionId,
         description: String,
-    ) -> Result<TransactionId, LedgerError> {
+    ) -> LedgerResult<TransactionId> {
         let original = self
             .find_transaction(original_tx)
             .ok_or(LedgerError::TransactionNotFound(original_tx))?;
@@ -331,7 +334,7 @@ impl Ledger {
         amount: Money,
         code: String,
         due_date: NaiveDate,
-    ) -> Result<uuid::Uuid, LedgerError> {
+    ) -> LedgerResult<uuid::Uuid> {
         self.ensure_can_transact(account_id, &amount)?;
 
         let slip = BankSlip::new(account_id, amount, code, due_date);
@@ -344,7 +347,7 @@ impl Ledger {
     pub fn register_bankslip(
         &mut self,
         slip_id: uuid::Uuid,
-    ) -> Result<(), LedgerError> {
+    ) -> LedgerResult<()> {
         let found = self.bankslips.iter().position(|s| s.id() == slip_id);
         let idx = found.ok_or(LedgerError::BankslipNotFound(slip_id))?;
 
@@ -361,7 +364,7 @@ impl Ledger {
         &mut self,
         slip_id: uuid::Uuid,
         description: String,
-    ) -> Result<TransactionId, LedgerError> {
+    ) -> LedgerResult<TransactionId> {
         let found = self.bankslips.iter().position(|s| s.id() == slip_id);
         let idx = found.ok_or(LedgerError::BankslipNotFound(slip_id))?;
 
@@ -423,7 +426,7 @@ impl Ledger {
         &self,
         account_id: AccountId,
         amount: &Money,
-    ) -> Result<(), LedgerError> {
+    ) -> LedgerResult<()> {
         let account = self
             .accounts
             .get(&account_id)

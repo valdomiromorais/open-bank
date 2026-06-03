@@ -1,4 +1,4 @@
-// #[pptbr] Módulo revisado:
+// #[ptbr] Módulo revisado:
 
 use std::fmt;
 use uuid::Uuid;
