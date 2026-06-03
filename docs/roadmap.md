@@ -12,8 +12,8 @@
 
 ---
 
-> **Extras executados:** `TransactionKind::Reversal` + `Ledger.reversal()` (estorno, dupla reversão bloqueada), refatoração de construtores (`new()` auto-gera ID, `with_id()` para restauração), temas JetBrains, arquitetura visual renderizada, 37 testes
-> **Análise Fintechs (`docs/FINTECHS.md`):** Estudo de 7 fintechs brasileiras validou monólito modular como padrão de sucesso, event sourcing como backbone (Nubank/Datomic), e revelou operações ausentes: **Boleto**, **Cashback/Rewards**, **Parcelamento (BNPL)**. PCI-DSS adicionado como meta de segurança. BaaS (Banking as a Service) como visão de longo prazo para Interessado 3.
+> **Extras executados:** `TransactionKind::Reversal` + `Ledger.reversal()` (estorno, dupla reversão bloqueada), `TransactionKind::BankslipPayment` + `BankSlip` com ciclo de vida completo, refatoração de construtores (`new()` auto-gera ID, `with_id()` para restauração), temas JetBrains, arquitetura visual renderizada, 44 testes
+> **Análise Fintechs (`docs/FINTECHS.md`):** Estudo de 7 fintechs brasileiras validou monólito modular como padrão de sucesso, event sourcing como backbone (Nubank/Datomic), e revelou operações: **BankslipPayment** ✅, **Cashback/Rewards**, **Parcelamento (BNPL)** pendentes. PCI-DSS adicionado como meta de segurança. BaaS (Banking as a Service) como visão de longo prazo para Interessado 3.
 
 ### TRIMESTRE 1: FUNDAÇÕES & O BERÇO DO MU (Mês 1-3)
 
