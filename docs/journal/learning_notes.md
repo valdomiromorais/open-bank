@@ -7,7 +7,66 @@
 
 ## Rust Notes
 
-1. Arrays ("[ ]") e string em Rust índexam a partir de 0 
+### Arrays ("[ ]") e string
+1. em Rust índexam a partir de 0
+
+
+### RAII (Resource Acquisition Is Initialization)
+RAII é um padrão onde o **ciclo de vida de um recurso** (como memória, arquivos ou locks) **está estritamente ligado ao
+escopo de uma variável**. Quando a variável sai de escopo, o compilador libera automaticamente o recurso, eliminando
+vazamentos de memória.
+
+O princípio central do RAII é **garantir que a inicialização de um recurso ocorra no momento da criação da variável**, e
+a **liberação ocorra automaticamente no momento da destruição**. Em Rust, isso é gerenciado pelo sistema de **_Ownership_**
+(Propriedade) e pelo **_Borrow Checker_** (Verificador de empréstimo).
+
+Aquisição: Quando você cria ou atribui um valor a uma variável na stack (ou ponteiro inteligente na heap, como Box),
+ela (a variável) assume a propriedade (_ownership_) do recurso.
+
+Liberação: Assim que a variável atinge o fim do seu escopo, o **Rust chama automaticamente o destrutor (destructor) do objeto**.
+
+### Variable Shadowing (ou sombreamento de variáveis)
+Em Rust é a prática de **declarar uma nova variável com o mesmo nome de uma variável existente**. A nova variável
+"esconde" a antiga dentro do escopo, permitindo alterar valores e tipos **sem precisar que a variável seja mutável**.
+
+Para criar uma variável "shadowed", **basta usar a palavra-chave let novamente com o mesmo nome da variável original**.
+
+Em Rust, **variáveis mutáveis (`let mut`) não podem ter seus tipos alterados após a declaração**. Com o shadowing,
+você pode **reaproveitar o nome enquanto transforma o dado em outro tipo**.
+
+```rust
+fn main() {
+    let espaco = "   "; // espaco é uma String/&str
+    let espaco = espaco.len(); // espaco agora é um inteiro (usize)
+
+    println!("O número de espaços é: {}", espaco);
+}
+```
+
+#### Sombreamento em Escopo Local (Blocos)
+Você pode declarar uma variável dentro de um bloco `{}`. Quando esse bloco terminar, a variável sombreada é descartada
+e a original volta a ser acessível.
+
+```rust
+fn main() {
+    let x = 5;
+    {
+        let x = x * 2; // x é 10 dentro deste bloco
+        println!("Valor de x no bloco: {}", x);
+    } // Fim do bloco, x sombreado é destruído
+
+    println!("Valor de x fora do bloco: {}", x); // Imprime 5
+}
+```
+
+#### Shadowing vs. Mutabilidade (mut)
+Alguns iniciantes confundem shadowing com mutabilidade, mas são conceitos bem diferentes:
+
+**Mutabilidade** (let mut): A variável permanece sendo a mesma na memória, mas **seu valor pode ser alterado**. **O tipo do
+dado não pode mudar**.
+
+**Shadowing** (let): Você está criando uma nova variável. Isso permite alterar o valor, alterar o tipo, e até mesmo
+transformá-la de volta em imutável após reatribuí-la.
 
 ---
 

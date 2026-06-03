@@ -22,7 +22,7 @@ pub enum LedgerError {
         balance: Money,
         requested: Money,
     },
-    CurrencyMismatch {
+    CurrencyMismatch {// Incompatibilidade
         account: AccountId,
         account_currency: Currency,
         tx_currency: Currency,
@@ -83,8 +83,8 @@ impl std::fmt::Display for LedgerError {
 /// #[ptbr] Saldo nunca é armazenado; é computado agregando transações (Event Sourcing).
 #[derive(Debug, Clone)]
 pub struct Ledger {
-    customers: HashMap<CustomerId, Customer>,
-    accounts: HashMap<AccountId, Account>,
+    customers   : HashMap<CustomerId, Customer>,
+    accounts    : HashMap<AccountId, Account>,
     transactions: Vec<Transaction>,
     bankslips: Vec<BankSlip>,
 }
